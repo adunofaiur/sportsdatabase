@@ -21,8 +21,16 @@ class Entity{
 		string type = Data[0][0];
 	}
 	
-	bool addEntry(vector<string> fields){
+	void addEntry(vector<string> fields){
 		Data.push_back(fields)
+		num_entries++;
+	}
+	
+	void addField(string field_name, string defaultVal = ""){
+		Data[0].push_back(field_name);
+		for(int i=1; i<Data.size(); i++){
+			Data[i].push_back(defaultVal);
+		}
 	}
 	
 
