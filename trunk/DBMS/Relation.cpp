@@ -15,10 +15,8 @@ class Relation{
     relative1 = rel1;
     relative2 = rel2;
     Data.push_back(new vector<string>)
-    Data[0].push_back(relname);
     Data[0].push_back(rel1);
     Data[0].push_back(rel2);
-
   }
   
 }
