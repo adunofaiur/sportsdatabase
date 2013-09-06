@@ -33,6 +33,16 @@ class Entity{
 		}
 	}
 	
+	bool renameField(string field_name, string new_name){
+		for(int i = 0; int i<num_fields; i++){
+			if(Data[0][i].compare(field_name){
+				Data[0][i] = new_name;
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	vector< vector< string > > rowQuerry(string Field_querried = "", string Querry){
 		vector< vector < string > > Return_data;
 		if(Field_querried.compare("")!=0){
