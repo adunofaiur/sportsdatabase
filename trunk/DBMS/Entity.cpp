@@ -9,7 +9,7 @@ class Entity{
 	
 	string type;
 	int num_entries, num_fields;
-	vector < vector < string> > Data;
+	vector < vector < string> > Data; 
 	
 	public://All external functions go here.
 	
@@ -73,4 +73,12 @@ class Entity{
 		return Return_data;
 	}
 	
+	void show(){
+		for(int i =0; i<num_entries; i++){
+			for(int j = 0; j<num_fields; j++){
+				cout<<"| "<<Data[i][j]<<" ";
+			}
+			cout<<"|\n";
+		}
+	}
 }
