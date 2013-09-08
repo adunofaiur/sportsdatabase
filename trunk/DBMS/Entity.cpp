@@ -42,7 +42,9 @@ class Entity{
 		}
 		return false;
 	}
-	
+	vector< vector< string> > getTable(){//For use by set operators
+		return Data;
+	}
 	vector< vector< string > > rowQuerry(string Field_querried = "", string Querry){
 		vector< vector < string > > Return_data;
 		if(Field_querried.compare("")!=0){
