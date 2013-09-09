@@ -1,0 +1,14 @@
+//Design Doc for Parser
+Token class:
+<type, value>
+Values for Type:
+
+'i' = identifier
+'o' = operator, associated value is charachter of operation: '+' for union, 
+	  '-' for difference, '*' for product, '=' for is_equal?, '!' for not_equal?,
+	  '<' for less than, '>' for greater than, 'l' for leq, 'g' for geq, 
+	  'r' for renaming, 's' for selection, 'p' for projection, 
+'v' = operand (variable), associated value is an identifier or a string literal
+'c' = command, associated value is chachter of command: 'o' for open, 'c' for close, 
+	'w' for write, 'e' for exit, 's' for show, 'm' for create (make), 'u' for update,
+	'i' for insert, 'd' for delete, 
