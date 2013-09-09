@@ -21,7 +21,7 @@ class Table{
 	
 	class Malformed_table{};
 	//Creates an entity with no entries.  Argument is the top row of the table
-	Table(vector<string> fields){
+	Table(vector<string> fields){//Constructor that simmply 
 		Data.push_back(fields);
 		num_entries = 1;
 		num_fields = fields.size();
@@ -37,13 +37,13 @@ class Table{
 			}
 		}
         Data = D;
-		update();
+		recalc();
     }	
 	Table( const Table& t){	//Copy constructor
 		for(int i=0; i< t.size(); i++){
 			Data.push_back(t.getRow(i));
 		}
-		update();
+		recalc();
 	}
 	
 	bool addEntry(vector<string> fields){
@@ -200,7 +200,7 @@ class Table{
 	return true;
 	}
 	
-	void show(){
+	void show(){//Display function
 		for(int i =0; i<num_entries; i++){
 			for(int j = 0; j<num_fields; j++){
 				cout<<"| "<<Data[i][j]<<" ";
@@ -208,7 +208,30 @@ class Table{
 			cout<<"|\n";
 		}
 	}
-	void update(){
+	bool update(int row, int column, string new_value){
+		if(row>=0 && row< num_entries && column >=0 && column < num_fields) Data[row][column] = new_value;
+		else return false;
+		return true;
+	}
+	bool update(string Key, string Field, string new_value){
+		int row = -1, column = -1;
+		for(int i = 0; i< num_entries; i++){
+			if(Data[i][0].compare(Key)){
+				row = i;
+				break;
+			}
+		}
+		for(int i = 0; i< num_columns; i++){
+			if(Data[0][i].compare(Key)){
+				column = i;
+				break;
+			}
+		}if(row>=0 && column >=0) Data[row][column] = new_value;
+		else return false;
+		return true;
+	}
+	
+	void recalc(){//updates internal variables
 		num_entries = Data.size();
 		if(num_entries) num_fields = Data[0].size();
 		else num_fields = 0;
@@ -228,7 +251,7 @@ class Table{
 			}
 		}
 		Data = product;
-		update();
+		recalc();
 	}
 };
 
