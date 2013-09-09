@@ -13,12 +13,22 @@ class Table{
 	
 	public://All external functions go here.
 	
+	class Malformed_table{};
 	//Creates an entity with no entries.  Argument is the top row of the table
 	Table(vector<string> fields){
 		Data.push_back(fields);
 		num_entries = 1;
 		num_fields = fields.size();
 		string name = Data[0][0];
+	}
+	Table(vector< vector< string > > D){
+		num_fields = D[0].size();
+		for(int i=0; i< D.size(); i++){
+			if(D[i].size() != num_fields){
+				throw new Malformed_table;
+			}
+		}
+		Data = D;
 	}
 	
 	bool addEntry(vector<string> fields){
@@ -35,6 +45,9 @@ class Table{
 		for(int i=1; i<Data.size(); i++){
 			Data[i].push_back(defaultVal);
 		}
+	}
+	string getName(){
+		return name;
 	}
 	
 	bool renameField(string field_name, string new_name){
@@ -89,6 +102,35 @@ class Table{
 		}
 		return return_val;
 	}
+	bool setUnion(Table t){
+		if(t.getName().compare(name) != 0) return 0; //Names different, not set compatible			
+		vector< vector <string> > temp = t.getTable;
+		if(temp.size()!= num_fields) return 0; //Sizes different, not set compatible
+		for(int i = 0; i < temp.size(); i++){
+			bool insert = true;
+			for(int j=0; j < num_entries){
+				if(Data[j][0].compare(temp[i][0])){ //Entry is already in table, no dulications allowed.
+					insert = false; 
+					break;
+				}
+				Data.push_back(temp[i]);
+			}
+		}
+	}
+	
+	bool setDifference(Table t){
+		if(t.getName().compare(name) != 0) return 0; //Names different, not set compatible			
+		vector< vector <string> > temp = t.getTable;
+		if(temp.size()!= num_fields) return 0; //Sizes different, not set compatible
+		for(int i = 0; i < temp.size(); i++){
+			for(int j=0; j < num_entries){
+				if(Data[j][0].compare(temp[i][0])){ //Entry is in both tables: remove entry
+					Data.erase(Data.begin() + j); 
+					break;
+				}
+			}
+		}
+	}
 	
 	void show(){
 		for(int i =0; i<num_entries; i++){
@@ -98,4 +140,5 @@ class Table{
 			cout<<"|\n";
 		}
 	}
+	
 }
