@@ -1,8 +1,14 @@
-//This File Defines and implements the class Table
+ //This File Defines and implements the class Table
 //Created: Paul Gaughan, 9-4-13
+
+#ifndef DBMS_TBL_CPP
+#define DBMS_TBL_CPP
 
 #include <string>
 #include <vector>
+#include <iostream>
+
+using namespace std;
 
 class Table{
 	private://Class data members go here.
@@ -32,8 +38,8 @@ class Table{
 	}
 	
 	bool addEntry(vector<string> fields){
-		if(fields.size == num_fields){
-			Data.push_back(fields)
+		if(fields.size() == num_fields){
+			Data.push_back(fields);
 			num_entries++;
 			return 1;
 		}
@@ -51,18 +57,18 @@ class Table{
 	}
 	
 	bool renameField(string field_name, string new_name){
-		for(int i = 0; int i<num_fields; i++){
-			if(Data[0][i].compare(field_name){
+		for(int i = 0; i<num_fields; i++){
+			if(Data[0][i].compare(field_name)){
 				Data[0][i] = new_name;
 				return true;
 			}
 		}
 		return false;
 	}
-	vector< vector< string> > getTable(){//For use by set operators
-		return Data;
+	const vector< vector< string> >* getTable() const{//For use by set operators
+		return &Data;
 	}
-	vector< vector< string > > rowQuerry(string Field_querried = "", string Querry){
+	vector< vector< string > > rowQuerry(string Querry, string Field_querried = ""){
 		vector< vector < string > > Return_data;
 		if(Field_querried.compare("")!=0){
 			int column =-1;
@@ -102,13 +108,37 @@ class Table{
 		}
 		return return_val;
 	}
+	
+	vector< vector < string > > projection(vector< string > fields){
+		vector<int> columns;
+		for(int i =0; i<fields.size(); i++){
+			for(int j=0; j<num_fields; i++){
+				if (Data[0][j].compare(fields[i])){ //Found a column
+					columns.push_back(j);
+					break;
+				}
+			}
+			vector< vector< string > > return_table;
+			if (columns.size()==0) return return_table;
+			
+			for( int i=0; i< num_entries; i++){
+				vector< string > temp;
+				for(int j=0; j<columns.size(); j++){
+					temp.push_back(Data[i][j]);
+				}
+				return_table.push_back(temp);
+			}
+		}
+	}
+	
 	bool setUnion(Table t){
 		if(t.getName().compare(name) != 0) return 0; //Names different, not set compatible			
-		vector< vector <string> > temp = t.getTable;
+		vector< vector <string> > temp;
+		temp = *(t.getTable());
 		if(temp.size()!= num_fields) return 0; //Sizes different, not set compatible
 		for(int i = 0; i < temp.size(); i++){
 			bool insert = true;
-			for(int j=0; j < num_entries){
+			for(int j=0; j < num_entries; j++){
 				if(Data[j][0].compare(temp[i][0])){ //Entry is already in table, no dulications allowed.
 					insert = false; 
 					break;
@@ -120,10 +150,11 @@ class Table{
 	
 	bool setDifference(Table t){
 		if(t.getName().compare(name) != 0) return 0; //Names different, not set compatible			
-		vector< vector <string> > temp = t.getTable;
+		vector< vector <string> > temp;
+		temp = *(t.getTable());
 		if(temp.size()!= num_fields) return 0; //Sizes different, not set compatible
 		for(int i = 0; i < temp.size(); i++){
-			for(int j=0; j < num_entries){
+			for(int j=0; j < num_entries; j++){
 				if(Data[j][0].compare(temp[i][0])){ //Entry is in both tables: remove entry
 					Data.erase(Data.begin() + j); 
 					break;
@@ -141,4 +172,9 @@ class Table{
 		}
 	}
 	
-}
+	bool crossProduct(){//Calculates the Cartesian product of two sets.
+	
+	}
+};
+
+#endif
