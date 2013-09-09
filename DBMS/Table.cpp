@@ -27,14 +27,23 @@ class Table{
 		num_fields = fields.size();
 		string name = Data[0][0];
 	}
-	Table(vector< vector< string > > D){
-		num_fields = D[0].size();
-		for(int i=0; i< D.size(); i++){
-			if(D[i].size() != num_fields){
-				throw new Malformed_table;
+    Table(vector< vector< string > > D){
+		if(D.size()!=0){
+			num_fields = D[0].size();
+			for(int i=0; i< D.size(); i++){
+				if(D[i].size() != num_fields){
+					throw new Malformed_table;
+				}
 			}
 		}
-		Data = D;
+        Data = D;
+		update();
+    }	
+	Table( const Table& t){	//Copy constructor
+		for(int i=0; i< t.size(); i++){
+			Data.push_back(t.getRow(i));
+		}
+		update();
 	}
 	
 	bool addEntry(vector<string> fields){
@@ -55,6 +64,9 @@ class Table{
 	string getName(){
 		return name;
 	}
+	const int size() const {
+		return num_entries;
+	}
 	
 	bool renameField(string field_name, string new_name){
 		for(int i = 0; i<num_fields; i++){
@@ -68,7 +80,11 @@ class Table{
 	const vector< vector< string> >* getTable() const{//For use by set operators
 		return &Data;
 	}
-	vector< vector< string > > rowQuerry(string Querry, string Field_querried = ""){
+	const vector< string > getRow(int i) const{
+		if(i>=0 && i < num_entries)	return Data[i];
+		else throw new Malformed_table{}; 
+	}
+	Table* rowQuerry(string Querry, string Field_querried = ""){
 		vector< vector < string > > Return_data;
 		if(Field_querried.compare("")!=0){
 			int column =-1;
@@ -79,7 +95,7 @@ class Table{
 				}
 			}
 			if(column == -1){
-				return Return_data;
+				return new Table(Return_data);
 			}
 			for(int i=1; i< num_entries; i++){
 				if(Data[i][column].compare(Querry)==0){
@@ -95,7 +111,7 @@ class Table{
 				}
 			}
 		}
-		return Return_data;
+		return new Table(Return_data);
 	}
 	vector< string > removeRow(string key){
 		vector<string> return_val;
@@ -109,7 +125,7 @@ class Table{
 		return return_val;
 	}
 	
-	vector< vector < string > > projection(vector< string > fields){
+	Table* projection(vector< string > fields){
 		vector<int> columns;
 		for(int i =0; i<fields.size(); i++){
 			for(int j=0; j<num_fields; i++){
@@ -118,49 +134,70 @@ class Table{
 					break;
 				}
 			}
-			vector< vector< string > > return_table;
-			if (columns.size()==0) return return_table;
-			
-			for( int i=0; i< num_entries; i++){
-				vector< string > temp;
-				for(int j=0; j<columns.size(); j++){
-					temp.push_back(Data[i][j]);
-				}
-				return_table.push_back(temp);
-			}
 		}
+		vector< vector< string > > return_table;
+		if (columns.size()==0) return new Table(return_table);
+		
+		for( int i=0; i< num_entries; i++){
+			vector< string > temp;
+			for(int j=0; j<columns.size(); j++){
+				temp.push_back(Data[i][columns[j]]);
+			}
+			return_table.push_back(temp);
+		}
+		return new Table(return_table);
+	}
+	Table* projection(vector< int > columns){
+		vector< vector< string > > return_table;
+		if (columns.size()==0) return new Table(return_table);
+	
+		for( int i=0; i< num_entries; i++){
+			vector< string > temp;
+			for(int j=0; j<columns.size(); j++){
+				if(columns[j]>=0 && columns[j]<num_fields)
+					temp.push_back(Data[i][columns[j]]);
+			}
+			return_table.push_back(temp);
+		}
+		return new Table(return_table);
 	}
 	
-	bool setUnion(Table t){
+	bool setUnion(Table& t){
 		if(t.getName().compare(name) != 0) return 0; //Names different, not set compatible			
 		vector< vector <string> > temp;
 		temp = *(t.getTable());
 		if(temp.size()!= num_fields) return 0; //Sizes different, not set compatible
 		for(int i = 0; i < temp.size(); i++){
-			bool insert = true;
+		bool insert = true;
 			for(int j=0; j < num_entries; j++){
-				if(Data[j][0].compare(temp[i][0])){ //Entry is already in table, no dulications allowed.
-					insert = false; 
+				if(Data[j][0].compare(temp[i][0])==0){ //Entry is already in table, no dulications allowed.
+					insert = false;
 					break;
 				}
+			}
+			if(insert){
 				Data.push_back(temp[i]);
+				num_entries++;
 			}
 		}
+	return true;
 	}
 	
-	bool setDifference(Table t){
+	bool setDifference(Table& t){
 		if(t.getName().compare(name) != 0) return 0; //Names different, not set compatible			
 		vector< vector <string> > temp;
 		temp = *(t.getTable());
 		if(temp.size()!= num_fields) return 0; //Sizes different, not set compatible
 		for(int i = 0; i < temp.size(); i++){
 			for(int j=0; j < num_entries; j++){
-				if(Data[j][0].compare(temp[i][0])){ //Entry is in both tables: remove entry
+				if(Data[j][0].compare(temp[i][0])==0){ //Entry is in both tables: remove entry
 					Data.erase(Data.begin() + j); 
+					num_entries--;
 					break;
 				}
 			}
 		}
+	return true;
 	}
 	
 	void show(){
@@ -171,9 +208,27 @@ class Table{
 			cout<<"|\n";
 		}
 	}
-	
-	bool crossProduct(){//Calculates the Cartesian product of two sets.
-	
+	void update(){
+		num_entries = Data.size();
+		if(num_entries) num_fields = Data[0].size();
+		else num_fields = 0;
+	}
+	bool crossProduct(Table& t){//Calculates the Cartesian product of two Tables.
+		vector< vector < string > > product;
+		vector< string > temp1(Data[0]);
+		vector< string > temp2 = t.getRow(0);
+		temp1.insert(temp1.end(), temp2.begin(), temp2.end());
+		product.push_back(temp1);
+		for(int i=1; i<num_entries; i++){
+			for(int j=1; j< t.size(); j++){
+				temp1 = getRow(i);
+				temp2 = t.getRow(j);
+				temp1.insert(temp1.end(), temp2.begin(), temp2.end());
+				product.push_back(temp1);
+			}
+		}
+		Data = product;
+		update();
 	}
 };
 
