@@ -27,7 +27,7 @@ class Table{
 		num_fields = fields.size();
 		string name = Data[0][0];
 	}
-    Table(vector< vector< string > > D){
+    Table(vector< vector< string > > D){//Constructor from data
 		if(D.size()!=0){
 			num_fields = D[0].size();
 			for(int i=0; i< D.size(); i++){
@@ -84,6 +84,7 @@ class Table{
 		if(i>=0 && i < num_entries)	return Data[i];
 		else throw new Malformed_table{}; 
 	}
+//Returns a Table of all rows that have Field_querried = Querry
 	Table* rowQuerry(string Querry, string Field_querried = ""){
 		vector< vector < string > > Return_data;
 		if(Field_querried.compare("")!=0){
@@ -162,7 +163,7 @@ class Table{
 		return new Table(return_table);
 	}
 	
-	bool setUnion(Table& t){
+	bool setUnion(Table& t){//Stores union in this Table
 		if(t.getName().compare(name) != 0) return 0; //Names different, not set compatible			
 		vector< vector <string> > temp;
 		temp = *(t.getTable());
@@ -183,7 +184,7 @@ class Table{
 	return true;
 	}
 	
-	bool setDifference(Table& t){
+	bool setDifference(Table& t){//Stores difference in this Table
 		if(t.getName().compare(name) != 0) return 0; //Names different, not set compatible			
 		vector< vector <string> > temp;
 		temp = *(t.getTable());
@@ -208,12 +209,12 @@ class Table{
 			cout<<"|\n";
 		}
 	}
-	bool update(int row, int column, string new_value){
+	bool update(int row, int column, string new_value){//Assign new value to the data entry at row and column
 		if(row>=0 && row< num_entries && column >=0 && column < num_fields) Data[row][column] = new_value;
 		else return false;
 		return true;
 	}
-	bool update(string Key, string Field, string new_value){
+	bool update(string Key, string Field, string new_value){//Assign new value to the data entry with Key and Field
 		int row = -1, column = -1;
 		for(int i = 0; i< num_entries; i++){
 			if(Data[i][0].compare(Key)){
@@ -221,7 +222,7 @@ class Table{
 				break;
 			}
 		}
-		for(int i = 0; i< num_columns; i++){
+		for(int i = 0; i< num_fields; i++){
 			if(Data[0][i].compare(Key)){
 				column = i;
 				break;
@@ -236,7 +237,10 @@ class Table{
 		if(num_entries) num_fields = Data[0].size();
 		else num_fields = 0;
 	}
-	bool crossProduct(Table& t){//Calculates the Cartesian product of two Tables.
+	
+//Calculates the Cartesian Product of this table and another one and 
+//stores teh result as the new value of this table	
+	bool crossProduct(Table& t){
 		vector< vector < string > > product;
 		vector< string > temp1(Data[0]);
 		vector< string > temp2 = t.getRow(0);

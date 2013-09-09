@@ -76,9 +76,21 @@ int main(){
 	Table t7 = *(t3.rowQuerry("Paul Gaughan", "NAME"));
 	t7.show();
 	
+	cout<<"\nTable 8: Renaming UIN column in Table 1 to NUMBER\n\n";
+	Table t8(t);
+	bool test8 = t8.update("NAME", "UIN", "NUMBER");
+	t8.show();
+
+	cout<<"\n Table 9: Removing row with Key = Jane Doe from Table 1\n\n";
+	Table t9(t);
+	t9.show();
+	vector< string > temp = t9.removeRow("Jane Doe");
+	bool test9 = false;
+	if (temp[0].compare("Jane Doe")==0) test9 = true;
+	
 	cout<<"\n\n\n\n";
-	if(test1 && test2 && test3 && test4 && (!test6) &&(!test7)){
+	if(test1 && test2 && test3 && test4 && (!test6) &&(!test7) && test8 && test9){
 		cout<<"ALL TESTS PASSED!\n";
-	}
+	}else cout<<"\nFAIL!";
 	
 }
