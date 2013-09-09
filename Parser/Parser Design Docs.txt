@@ -11,4 +11,4 @@ Values for Type:
 'v' = operand (variable), associated value is an identifier or a string literal
 'c' = command, associated value is chachter of command: 'o' for open, 'c' for close, 
 	'w' for write, 'e' for exit, 's' for show, 'm' for create (make), 'u' for update,
-	'i' for insert, 'd' for delete, 
+	'i' for insert, 'd' for delete
