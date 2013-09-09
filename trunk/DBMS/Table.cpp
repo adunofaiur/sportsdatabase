@@ -120,6 +120,7 @@ class Table{
 			if(Data[i][0].compare(key)==0){
 				return_val = Data[i];
 				Data.erase(Data.begin()+i);
+				recalc();
 				return return_val;
 			}
 		}

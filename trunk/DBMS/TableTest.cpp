@@ -83,8 +83,8 @@ int main(){
 
 	cout<<"\n Table 9: Removing row with Key = Jane Doe from Table 1\n\n";
 	Table t9(t);
-	t9.show();
 	vector< string > temp = t9.removeRow("Jane Doe");
+	t9.show();
 	bool test9 = false;
 	if (temp[0].compare("Jane Doe")==0) test9 = true;
 	
