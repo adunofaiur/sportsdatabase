@@ -1,0 +1,22 @@
+Howdy!
+
+Ok, I'm pretty weak at things relating to parsing, but hopefull this will work.
+
+The tokenizer function does three things:
+
+1. Adds spaces to a string to delinieate things like parenthesis that may not have spaces
+2. Splits the string into a vector of strings based on spaces as a delineator
+3. Creates a vector<Token> based on the vector<string>
+
+Tokens are defined differently in this implementation than they are in the design doc for the parser.
+
+Tokens are tuples of char type and string val
+
+types:
+'o' - operand (value stored would be "&&" or "||", ect)
+'i' - identifier (any literally stored string). A LOT of things will be stored as identifiers. Because the tokenizer doesn't "know" the grammar, literals will also be stored under this type.
+'c' - command. The value would be something like "INSERT" or "INTO" or "WRITE"
+'e' - The expression commands other than atomic expression. Ie, "+", "-", "*", "project", "select", "rename".
+'h' - Helpers. These are things like "(", ",", ";", "<-" --or basically anything that doesn't really fit anywhere else in the grammer.
+
+The only special cases I  can think of is something like ""dog"" -- in this case i would store it as ('i', "dog"), dismissing the quotation marks entirely.
