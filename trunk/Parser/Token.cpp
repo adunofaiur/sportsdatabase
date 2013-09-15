@@ -1,11 +1,17 @@
-//Token.cpp
-//Defines Token Class
+//
+//  Token.cpp
+//  delimeter_inserter
+//
+//  Created by Matthew Carrasco on 9/14/13.
+//  Copyright (c) 2013 Matthew Carrasco. All rights reserved.
+//
 
-struct Token{
-	char kind;
-	char value;
+#include "Token.h"
 
-	Token() : kind(' '), value(' '){}  
-	Token(char k) : kind(k), value(' '){}
-	Token(char k, char v) : kind(k), value(v){}
-};
+Token::Token(string new_val){
+    val = new_val;
+}
+Token::Token(char new_type, string new_val){
+    type = new_type;
+    val = new_val;
+}
