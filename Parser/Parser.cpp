@@ -128,8 +128,39 @@ bool Update(vector<Token>& input){
 	ret = ret && Match(input, where) && Condition(input);
 	return ret;
 }
-bool Create(vector<Token>& input);
-bool Delete(vector<Token>& input);
+bool Create(vector<Token>& input){
+	Token create('c', "CREATE");
+	if(!Match(input, create)){
+		UnEat();
+		return false;
+	}
+	Token table('c', "TABLE");
+	Token primary('c', "PRIMARY");
+	Token key('c', "KEY");
+	Token delimit('h', "");
+	Token comma('h',",");
+	bool ret = Match(input, table);
+	ret = ret && Match(input, primary) && Match(input, key) && Identifier(input) && Identifier(input);
+	while(ret && Match(input, comma)){
+		ret = ret && Identifier(input) && Identifier(input);
+	}
+	ret = ret && Match(input, delimit)&&Identifier(input);
+	while(ret && Match(input, comma)){
+		ret = ret && Identifier(input);
+	}
+	return ret;
+}
+bool Delete(vector<Token>& input){
+	Token delet('c', "DELETE");
+	if(!Match(input, delet)){
+		UnEat();
+		return false;
+	}
+	Token from('c', "FROM");
+	Token where('c', "WHERE");
+	bool ret = Match(input, from) && Identifier(input) && Match(input, where) && Condition(input);
+	return ret;
+}
 
 
 bool Atomic(vector<Token>& input){
@@ -155,7 +186,7 @@ bool Conjunction(vector<Token>& input){
 
 bool Condition(vector<Token>& input){
 	Token delimit('h', "");
-	bool ret = Match(input, delimit) && Conjunction(input);
+	bool ret = (Match(input, delimit) && Conjunction(input) );
 	Token op('o', "||");
 	int eaten = 1;
 	while(ret && Match(input, op)){
