@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <iterator>
 #include "Token.h"
+#include "Parser.cpp"
 using namespace std;
 //Adds spaces before/after parenthesis, quotes, commas, and semicolons
 string add_spaces(string s){
@@ -85,4 +86,15 @@ vector<Token> tokenize(string s){
         t.push_back(make_token(s2[i]));
     }
     return t;
+}
+
+int main(){
+	while(true){
+		string input;
+		cout<<"Please enter a string to evaluate, or hit Control-C to exit.\n";
+		cin>>input;
+		vector<Token> toks = tokenize(input);
+		bool correct = Parse(toks);
+		cout<<"Correctness of input: "<<correct<<endl;
+	}
 }
