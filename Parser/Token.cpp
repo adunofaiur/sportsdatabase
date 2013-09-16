@@ -8,6 +8,10 @@
 
 #include "Token.h"
 
+Token::Token(){//Default Token
+	type = '#';
+    val = "";
+}
 Token::Token(string new_val){
     val = new_val;
 }

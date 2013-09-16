@@ -37,10 +37,10 @@ Token make_token(string s){
     //that is NOT an operand
     if (s == "(" || s == ")" || s == ";" || s == "," || "<-"){
         
-        return Token('i', s);
+        return Token('h', s);
     }
     //Checks to see if the string is an operator
-    if (s == "&&" || s == "||" || s == "==" || s == "!="){
+    if (s == "&&" || s == "||" || s == "==" || s == "!=" || s== "<" || s== ">" || s== "<=" || s== ">=" || s=="="){
         return Token('o', s);
     }
     else if (s == "+" || s == "-" || s == "*" || s == "rename" ||
