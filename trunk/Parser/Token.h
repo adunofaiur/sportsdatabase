@@ -18,11 +18,12 @@ private:
     char type;
     string val;
 public:
+	Token();
     Token(string new_val);
     Token(char new_type, string new_val);
     
     char get_id() { return type; }
-    string get_cal() {return val;}
+    string get_val() {return val;}
     
 };
 
