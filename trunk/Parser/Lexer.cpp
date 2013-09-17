@@ -45,7 +45,7 @@ Token make_token(string s){
     
     //Check to see if the string is a single special character
     //that is NOT an operand
-    if (s == "(" || s == ")" || s == ";" || s == "," || "<-"){
+    if (s == "(" || s == ")" || s == ";" || s == "," || s=="<-"){
         Token t = Token ('a', s);
         return Token('h', s);
     }
