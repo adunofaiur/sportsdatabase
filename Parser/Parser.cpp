@@ -11,8 +11,8 @@
 
 #include <vector>
 
-extern int iter=0;
-
+int iter=0;
+Token NoToken = *(new Token());
 void UnEat(int Eaten = 1){//"UnEats" a token.
     iter-=Eaten;
 }
@@ -20,9 +20,10 @@ void UnEat(int Eaten = 1){//"UnEats" a token.
 Token Eat(vector<Token>& input){//"Eats" a token from the input and returns it.
     iter++;
     if(input.size()>iter-1){
-        Token temp = input[iter];
+        Token temp = input[iter-1];
         return temp;
     }
+	return NoToken;
 }
 
 bool Match(vector<Token>& input, Token t){
