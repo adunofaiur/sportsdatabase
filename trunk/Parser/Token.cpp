@@ -9,7 +9,7 @@
 #include "Token.h"
 
 Token::Token(){//Default Token
-	type = '#';
+    type = '#';
     val = "";
 }
 Token::Token(string new_val){
