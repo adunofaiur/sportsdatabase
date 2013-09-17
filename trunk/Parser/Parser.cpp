@@ -8,11 +8,13 @@
 #define PARSER_CPP
 
 #include "Token.h"
-
+#include <iostream>
 #include <vector>
 
 int iter=0;
+
 Token NoToken = *(new Token());
+
 void UnEat(int Eaten = 1){//"UnEats" a token.
     iter-=Eaten;
 }
@@ -77,7 +79,8 @@ bool Write(vector<Token>& input){
 }
 bool Show(vector<Token>& input){
     Token op('c', "SHOW");
-    if(!Match(input,op)){
+	cout<<"SHOW\n";
+    if(!Match(input, op)){
         UnEat();
         return false;
     }
@@ -169,7 +172,7 @@ bool Delete(vector<Token>& input){
 
 
 bool Atomic(vector<Token>& input){
-    return Identifier(input) || Expression(input);
+   return Identifier(input) || Expression(input);
 }
 bool Comparison(vector<Token>& input){
     Token op('o', "");
@@ -205,14 +208,22 @@ bool Condition(vector<Token>& input){
 
 bool Selection(vector<Token>& input ){
     Token op('e', "select");
-    return Match(input, op) && Condition(input) && Atomic(input);
+     if(!Match(input, op)){
+        UnEat();
+        return false;
+    }
+   return Condition(input) && Atomic(input);
 }
 
 bool Projection(vector<Token>& input ){
     Token op('e', "project");
+    if(!Match(input, op)){
+        UnEat();
+        return false;
+    }
     Token delimit('h', "");
     Token comma('h', ",");
-    bool ret =  Match(input, op) && Match(input, delimit)&&Identifier(input);
+    bool ret = Match(input, delimit)&&Identifier(input);
     int eaten = 1;
     while(ret && Match(input, comma)){
         ++eaten;
@@ -224,9 +235,13 @@ bool Projection(vector<Token>& input ){
 
 bool Renaming(vector<Token>& input ){
     Token op('e', "rename");
-    Token delimit('h', "");
+     if(!Match(input, op)){
+        UnEat();
+        return false;
+    }
+   Token delimit('h', "");
     Token comma('h', ",");
-    bool ret =  Match(input, op) && Match(input, delimit)&&Identifier(input);
+    bool ret = Match(input, delimit)&&Identifier(input);
     int eaten = 1;
     while(ret && Match(input, comma)){
         ++eaten;
@@ -238,36 +253,35 @@ bool Renaming(vector<Token>& input ){
 bool Union(vector<Token>& input ){
     Token op('e', "+");
     bool ret = Atomic(input) && Match(input, op) && Atomic(input);
-    if(!ret) UnEat();
     return ret;
 }
 
 bool Difference(vector<Token>& input ){
     Token op('e', "-");
     bool ret = Atomic(input) && Match(input, op) && Atomic(input);
-    if(!ret) UnEat();
     return ret;
 }
 
 bool Product(vector<Token>& input ){
     Token op('e', "*");
     bool ret = Atomic(input) && Match(input, op) && Atomic(input);
-    if(!ret) UnEat();
     return ret;
 }
 
 bool Expression(vector<Token>& input){
-    return Atomic(input) || Selection(input )|| Projection(input) || Renaming(input)||Union(input)||Difference(input)||Product(input);
+   if(iter >= input.size()) return true;
+   return Selection(input )|| Projection(input) || Renaming(input)||Union(input)||Difference(input)||Product(input)||Atomic(input);
 }
 
 bool Identifier(vector<Token>& input){
+ 	if(iter >= input.size()) return false;
     if(Eat(input).get_id()=='i') return true;
     UnEat();
     return false;
 }
 
 bool Querry(vector<Token>& input){
-    Token op('h', "<-");
+	Token op('h', "<-");
     bool ret =  Identifier(input) && Match(input, op) && Expression(input);
     if(!ret) UnEat();
     return ret;
@@ -277,7 +291,11 @@ bool Command(vector<Token>& input){
     return Open(input) || Close(input) || Write(input) || Exit(input) || Show(input) || Create(input) || Insert(input) || Update(input) || Delete(input);
 }
 bool Parse(vector<Token>& input){
-    return Querry(input) || Command(input);
+		for(int i=0; i<input.size(); i++){
+			cout<<"TOKEN"<<i<<" :  {"<<input[i].get_id()<<", "<<input[i].get_val()<<"}\n";
+		}
+	if(input[0].get_id() == 'c') return Command(input);
+	else return Querry(input);
 }
 
 

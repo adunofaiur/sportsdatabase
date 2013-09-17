@@ -26,11 +26,11 @@ string add_spaces(string s){
         
         if (*i == '(' || *i == ')' || *i == ';' || *i == ','){
             if (*(i+1) != ' '){
-                s.insert((i+1), ' ');
+                i = s.insert((i+1), ' ');
             }
             if (i != s.begin()){
                 if (*(i-1) != ' '){
-                    s.insert(i, ' ');
+                    i = s.insert(i, ' ')+1;
                 }
             }
         }
@@ -97,15 +97,10 @@ vector<Token> tokenize(string s){
     return t;
 }
 int main() {
-    string input;
-	while(true){
+	    string input;
 		cout << "Enter strings to evaluate correctness: ";
 		getline(cin, input);
         vector<Token> toks = tokenize(input);
-		for(int i=0; i<toks.size(); i++){
-			cout<<"TOKEN"<<i<<" :  {"<<toks[i].get_id()<<", "<<toks[i].get_val()<<"}\n";
-		}
         bool correct = Parse(toks);
         cout << "Is correct?: " << correct << endl;
-	}
 }
