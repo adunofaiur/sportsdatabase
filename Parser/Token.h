@@ -18,7 +18,7 @@ private:
     char type;
     string val;
 public:
-	Token();
+    Token();
     Token(string new_val);
     Token(char new_type, string new_val);
     
