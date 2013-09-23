@@ -23,7 +23,7 @@ class Table{
 	class Malformed_table{};
 	
 	//Creates an entity with no entries.  Argument is the top row of the table
-	Table(vector<string> fields){//Constructor that simmply 
+	Table(vector<string> fields){
 		Data.push_back(fields);
 		num_entries = 1;
 		num_fields = fields.size();
@@ -89,8 +89,11 @@ class Table{
 		else throw new Malformed_table; 
 	}
 //Returns a Table of all rows that have Field_querried = Querry
-	Table* rowQuerry(string Querry, string Field_querried = ""){
+	Table* rowQuerry(string Querry, string Field_querried = "", char op = '='){
 		vector< vector < string > > Return_data;
+		int comp = 0;
+		if(op=='<') comp = -1;
+		if(op=='>') comp=1;
 		if(Field_querried.compare("")!=0){
 			int column =-1;
 			for(int i=0; i< num_fields; i++){
@@ -103,14 +106,14 @@ class Table{
 				return new Table(Return_data);
 			}
 			for(int i=1; i< num_entries; i++){
-				if(Data[i][column].compare(Querry)==0){
+				if(Data[i][column].compare(Querry)==comp){
 					Return_data.push_back(Data[i]);
 				}
 			}
 		}else{
 			for(int i =0; i<num_entries; i++){
 				for(int j = 0; j<num_fields; j++){
-					if(Data[i][j].compare(Querry)==0){
+					if(Data[i][j].compare(Querry)==comp){
 						Return_data.push_back(Data[i]);
 					}
 				}
@@ -247,6 +250,8 @@ class Table{
 		num_entries = Data.size();
 		if(num_entries) num_fields = Data[0].size();
 		else num_fields = 0;
+		if(num_entries && num_fields) name = Data[0][0];
+		else name = "";
 	}
 	
 //Calculates the Cartesian Product of this table and another one and 
