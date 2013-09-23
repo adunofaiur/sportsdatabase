@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -20,6 +21,7 @@ class Table{
 	public://All external functions go here.
 	
 	class Malformed_table{};
+	
 	//Creates an entity with no entries.  Argument is the top row of the table
 	Table(vector<string> fields){//Constructor that simmply 
 		Data.push_back(fields);
@@ -45,6 +47,8 @@ class Table{
 		}
 		recalc();
 	}
+
+	Table(){}
 	
 	bool addEntry(vector<string> fields){
 		if(fields.size() == num_fields){
@@ -82,7 +86,7 @@ class Table{
 	}
 	const vector< string > getRow(int i) const{
 		if(i>=0 && i < num_entries)	return Data[i];
-		else throw new Malformed_table{}; 
+		else throw new Malformed_table; 
 	}
 //Returns a Table of all rows that have Field_querried = Querry
 	Table* rowQuerry(string Querry, string Field_querried = ""){
@@ -210,6 +214,12 @@ class Table{
 			cout<<"|\n";
 		}
 	}
+
+
+	
+
+
+
 	bool update(int row, int column, string new_value){//Assign new value to the data entry at row and column
 		if(row>=0 && row< num_entries && column >=0 && column < num_fields) Data[row][column] = new_value;
 		else return false;
@@ -258,6 +268,52 @@ class Table{
 		Data = product;
 		recalc();
 	}
+
+	void save(){
+
+		ofstream fout ("database.txt" , ofstream::out);
+
+		for(int i =0; i<num_entries; i++){
+			for(int j = 0; j<num_fields; j++){
+				fout<<Data[i][j]<<"|";
+			}
+			fout<<"[()]|";
+		}
+	}
 };
+
+//helper function
+	Table initialize(){
+		vector < string > in;
+		string input = " ";
+		int i = 0;
+		Table t;
+		ifstream fin("database.txt",ios::in); 
+		while(fin.good()){
+
+			getline(fin, input, '|'); 
+
+			if(input == "[()]" && i == 0){
+				Table q(in);
+				for(int q = 0; q<in.size(); q++)
+					cout << in[q] <<endl;
+
+				in.clear();
+				t = q;
+				i++;
+			}
+			else if(input == "[()]"){ // [()] is the end of line delimeter
+				t.addEntry(in);
+				for(int q = 0; q<in.size(); q++)
+					cout << in[q] <<endl;
+				in.clear();
+			}
+			else
+				in.push_back(input);
+		}
+
+		fin.close();
+		return t;
+	}
 
 #endif
