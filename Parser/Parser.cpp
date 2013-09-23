@@ -7,6 +7,7 @@
 #ifndef PASRER_CPP
 #define PARSER_CPP
 
+#include "Table.cpp"
 #include "Token.h"
 #include <iostream>
 #include <vector>
@@ -14,6 +15,13 @@
 int iter=0;
 
 Token NoToken = *(new Token());
+
+struct Data_entry{
+	string key;
+	Table data;
+}
+
+vector<Data_entry> TABLES;
 
 void UnEat(int Eaten = 1){//"UnEats" a token.
     iter-=Eaten;
@@ -172,7 +180,7 @@ bool Delete(vector<Token>& input){
 
 
 bool Atomic(vector<Token>& input){
-   return Identifier(input) || Expression(input);
+   return Expression(input);
 }
 bool Comparison(vector<Token>& input){
     Token op('o', "");
@@ -206,11 +214,11 @@ bool Condition(vector<Token>& input){
 }
 
 
-bool Selection(vector<Token>& input ){
+Table* Selection(vector<Token>& input ){
     Token op('e', "select");
      if(!Match(input, op)){
         UnEat();
-        return false;
+        return NULL;
     }
    return Condition(input) && Atomic(input);
 }
@@ -233,15 +241,16 @@ bool Projection(vector<Token>& input ){
     return ret;
 }
 
-bool Renaming(vector<Token>& input ){
+Table* Renaming(vector<Token>& input ){
     Token op('e', "rename");
      if(!Match(input, op)){
         UnEat();
-        return false;
+		throw 1;
     }
-   Token delimit('h', "");
+	Token delimit('h', "");
     Token comma('h', ",");
-    bool ret = Match(input, delimit)&&Identifier(input);
+    bool ret = Match(input, delimit);
+	
     int eaten = 1;
     while(ret && Match(input, comma)){
         ++eaten;
@@ -250,34 +259,78 @@ bool Renaming(vector<Token>& input ){
     if(!ret) UnEat(eaten);
     return ret;
 }
-bool Union(vector<Token>& input ){
+Table* Union(vector<Token>& input ){
     Token op('e', "+");
-    bool ret = Atomic(input) && Match(input, op) && Atomic(input);
-    return ret;
+    Table t1 =  new Table(*(Atomic(input)));
+	bool b = Match(input, op);
+	Table* t2 = Atomic(input);
+	if(!b) throw 1;
+	t1->setDifference(*(t2));
+	return *t1;
 }
 
-bool Difference(vector<Token>& input ){
+Table* Difference(vector<Token>& input ){
     Token op('e', "-");
-    bool ret = Atomic(input) && Match(input, op) && Atomic(input);
-    return ret;
+    Table t1 =  new Table(*(Atomic(input)));
+	bool b = Match(input, op);
+	Table* t2 = Atomic(input);
+	if(!b) throw 1;
+    t1->setDifference(*(t2));
+	return *t1;
 }
 
-bool Product(vector<Token>& input ){
+Table* Product(vector<Token>& input ){
     Token op('e', "*");
-    bool ret = Atomic(input) && Match(input, op) && Atomic(input);
-    return ret;
+    Table t1 =  new Table(*(Atomic(input)));
+	bool b = Match(input, op);
+	Table t2 = Atomic(input);
+	if(!b) throw 1;
+    t1->crossProduct(*(t2));
+	return *t1;
 }
 
-bool Expression(vector<Token>& input){
-   if(iter >= input.size()) return true;
-   return Selection(input )|| Projection(input) || Renaming(input)||Union(input)||Difference(input)||Product(input)||Atomic(input);
+Table* Expression(vector<Token>& input){
+ 	if(iter >= input.size()) throw 1;
+	Token tok1 = input[iter];
+	if(tok1.get_id() == 'e'){
+		if(tok1.get_val= "select"){
+			return Selection(input);
+		}else if(tok1.get_val= "project"){
+			return Projection(input);
+		}else if(tok1.get_val= "Rename"){
+			return Renaming(input);
+		}
+	}
+	if(iter<= input.size()-2){
+		Token tok2 = input[iter+1];
+		if(tok1.get_id() == 'e'){
+			if(tok1.get_val= "+"){
+				return Union(input);
+			}else if(tok1.get_val= "-"){
+				return Difference(input);
+			}else if(tok1.get_val= "*"){
+				return Product(input);
+			}
+		}	
+	}
+	
+	return Identifier(input);
 }
 
-bool Identifier(vector<Token>& input){
- 	if(iter >= input.size()) return false;
-    if(Eat(input).get_id()=='i') return true;
-    UnEat();
-    return false;
+Table* Identifier(vector<Token>& input){
+ 	if(iter >= input.size()) throw 1;
+	Token tok = Eat(input);
+    if(tok.get_id()=='i'){
+		string name = tok.get_val();
+		for(int i=0; i< TABLES.size(); i++){
+			if(name.compare(TABLES[i].key)==0){
+				return TABLES[i].data;
+			}
+		}
+		//Not an identifier.  Try literals.		
+		return NULL;
+	}
+	UnEat();
 }
 
 bool Querry(vector<Token>& input){
