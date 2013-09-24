@@ -2,6 +2,8 @@
 //Defines Lexer.  Take Plain-text input, convert to token stream
 
 //Call tokenizer on a string to get a vector of tokens.
+#ifndef LEXERCPP
+#define LEXERCPP
 #include <iostream>
 #include <string>
 #include <vector>
@@ -10,7 +12,6 @@
 #include <iterator>
 #include "Token.h"
 #include "Token.cpp"
-#include "Parser.cpp"
 using namespace std;
 
 
@@ -22,15 +23,19 @@ using namespace std;
 
 //Adds spaces before/after parenthesis, quotes, commas, and semicolons
 string add_spaces(string s){
-    for (string::iterator i = s.begin(); i != s.end()-1; i++){
+    for (int i=0; i< s.size(); i++){
         
-        if (*i == '(' || *i == ')' || *i == ';' || *i == ','){
-            if (*(i+1) != ' '){
-                i = s.insert((i+1), ' ');
-            }
-            if (i != s.begin()){
-                if (*(i-1) != ' '){
-                    i = s.insert(i, ' ')+1;
+        if (s[i] == '(' || s[i] == ')' || s[i] == ';' || s[i] == ','){
+			if(i<s.size()-1){
+				if (s[i+1] != ' '){
+					s.insert((s.begin()+i+1), ' ');
+					i++;
+				}
+			}
+            if (i != 0){
+                if (s[i-1] != ' '){
+                    s.insert(s.begin()+i, ' ');
+					i++;
                 }
             }
         }
@@ -57,20 +62,17 @@ Token make_token(string s){
              s == "project" || s == "select"){
         return Token('e', s);
     }
-    else if (s == "DELETE" || s == "VARCHAR" || s == "INTEGER" || s == "DELETE" || s== "INSERT" || s == "INTO" || s == "UPDATE" || s == "OPEN" || s == "CLOSE" || s == "WRITE" ||
+    else if (s == "DELETE" ||  s == "DELETE" || s== "INSERT" || s == "INTO" || s == "UPDATE" || s == "OPEN" || s == "CLOSE" || s == "WRITE" ||
              s == "EXIT" || s == "SHOW" || s == "CREATE" || s  == "VALUES" || s == "FROM" ||
              s == "RELATION" || s == "WHERE"){
         return Token('c', s);
     }
     else {
         string::iterator a = s.begin();
-        string::iterator b = s.end();
         
-        if (*a == '"' || *b == '"'){
-            s.erase(a);
-            s.erase(b);
-        }
-        
+        if (*a == '"') s.erase(a);
+        string::iterator b = s.end()-1;
+		if(*b=='"') s.erase(b);
         return Token('i', s);
     }
     
@@ -96,11 +98,4 @@ vector<Token> tokenize(string s){
     }
     return t;
 }
-int main() {
-	    string input;
-		cout << "Enter strings to evaluate correctness: ";
-		getline(cin, input);
-        vector<Token> toks = tokenize(input);
-        bool correct = Parse(toks);
-        cout << "Is correct?: " << correct << endl;
-}
+#endif

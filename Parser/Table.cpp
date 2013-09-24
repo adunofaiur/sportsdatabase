@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -20,12 +21,11 @@ class Table{
 	public://All external functions go here.
 	
 	class Malformed_table{};
+	
 	//Creates an entity with no entries.  Argument is the top row of the table
-	Table(vector<string> fields){//Constructor that simmply 
+	Table(vector<string> fields){
 		Data.push_back(fields);
-		num_entries = 1;
-		num_fields = fields.size();
-		string name = Data[0][0];
+		recalc();
 	}
     Table(vector< vector< string > > D){//Constructor from data
 		if(D.size()!=0){
@@ -45,11 +45,17 @@ class Table{
 		}
 		recalc();
 	}
+
+	Table(){}
+	
+	void setName(string newName){
+		name = newName;
+	}
 	
 	bool addEntry(vector<string> fields){
-		if(fields.size() == num_fields){
+		if((fields.size() == num_fields) || num_entries ==0){
 			Data.push_back(fields);
-			num_entries++;
+			recalc();
 			return 1;
 		}
 		else return 0;
@@ -67,6 +73,12 @@ class Table{
 	const int size() const {
 		return num_entries;
 	}
+	bool rename(vector<string> fields){
+		if(fields.size() != num_fields) return false;
+		Data[0] = fields;
+		recalc();
+		return true;
+	}
 	
 	bool renameField(string field_name, string new_name){
 		for(int i = 0; i<num_fields; i++){
@@ -82,11 +94,14 @@ class Table{
 	}
 	const vector< string > getRow(int i) const{
 		if(i>=0 && i < num_entries)	return Data[i];
-		else throw new Malformed_table{}; 
+		else throw new Malformed_table; 
 	}
 //Returns a Table of all rows that have Field_querried = Querry
-	Table* rowQuerry(string Querry, string Field_querried = ""){
+	Table* rowQuerry(string Querry, string Field_querried = "", char op = '='){
 		vector< vector < string > > Return_data;
+		int comp = 0;
+		if(op=='<') comp = -1;
+		if(op=='>') comp=1;
 		if(Field_querried.compare("")!=0){
 			int column =-1;
 			for(int i=0; i< num_fields; i++){
@@ -99,14 +114,14 @@ class Table{
 				return new Table(Return_data);
 			}
 			for(int i=1; i< num_entries; i++){
-				if(Data[i][column].compare(Querry)==0){
+				if(Data[i][column].compare(Querry)==comp){
 					Return_data.push_back(Data[i]);
 				}
 			}
 		}else{
 			for(int i =0; i<num_entries; i++){
 				for(int j = 0; j<num_fields; j++){
-					if(Data[i][j].compare(Querry)==0){
+					if(Data[i][j].compare(Querry)==comp){
 						Return_data.push_back(Data[i]);
 					}
 				}
@@ -165,7 +180,6 @@ class Table{
 	}
 	
 	bool setUnion(Table& t){//Stores union in this Table
-		if(t.getName().compare(name) != 0) return 0; //Names different, not set compatible			
 		vector< vector <string> > temp;
 		temp = *(t.getTable());
 		if(temp.size()!= num_fields) return 0; //Sizes different, not set compatible
@@ -185,8 +199,32 @@ class Table{
 	return true;
 	}
 	
+	bool setIntersection(Table& t){//Stores intersection in this Table
+		vector< vector <string> > temp1;
+		vector< vector <string> > temp2;
+		temp1 = *(getTable());
+		temp2 = *(t.getTable());
+		if(temp2.size()!= num_fields) return 0; //Sizes different, not set compatible
+		for(int i = 0; i < temp2.size(); i++){
+		bool insert = false;
+			for(int j=0; j < num_entries; j++){
+				if(Data[j][0].compare(temp2[i][0])==0){ //Entry in both Tables, put in new Table
+					insert = true;
+					break;
+				}
+			}
+			if(insert){
+				temp1.push_back(temp2[i]);
+				num_entries++;
+			}
+		}
+		Data = temp1;
+		recalc();
+		return true;
+	}
+	
+	
 	bool setDifference(Table& t){//Stores difference in this Table
-		if(t.getName().compare(name) != 0) return 0; //Names different, not set compatible			
 		vector< vector <string> > temp;
 		temp = *(t.getTable());
 		if(temp.size()!= num_fields) return 0; //Sizes different, not set compatible
@@ -210,6 +248,12 @@ class Table{
 			cout<<"|\n";
 		}
 	}
+
+
+	
+
+
+
 	bool update(int row, int column, string new_value){//Assign new value to the data entry at row and column
 		if(row>=0 && row< num_entries && column >=0 && column < num_fields) Data[row][column] = new_value;
 		else return false;
@@ -237,6 +281,8 @@ class Table{
 		num_entries = Data.size();
 		if(num_entries) num_fields = Data[0].size();
 		else num_fields = 0;
+		if(num_entries && num_fields) name = Data[0][0];
+		else name = "";
 	}
 	
 //Calculates the Cartesian Product of this table and another one and 
@@ -258,6 +304,75 @@ class Table{
 		Data = product;
 		recalc();
 	}
+	bool read(){
+		Data.clear();
+		num_entries = 0; num_fields=0;
+		string filename = name + ".db";
+		vector<string> in;
+		ifstream fin (filename.c_str(), ifstream::in);
+		string s;
+		while(fin.good()){
+			fin>>s;
+			if(s.compare("[()]")==0){
+				addEntry(in);
+				recalc();
+				in.clear();
+			}
+			else{
+				in.push_back(s);				
+			}
+		}
+
+		fin.close();
+		
+		return true;
+	}
+
+	void save(){
+		string filename = name + ".db";
+		ofstream fout (filename.c_str() , ofstream::out);
+		for(int i =0; i<num_entries; i++){
+			for(int j = 0; j<num_fields; j++){
+				fout<<Data[i][j]<<" ";
+			}
+			fout<<"[()] ";//Sequence that will not be likely to appear to indicate end of row
+		}
+		fout.close();
+	}
 };
+
+//helper function
+	Table initialize(){
+		vector < string > in;
+		string input = " ";
+		int i = 0;
+		Table t;
+		ifstream fin("database.txt",ios::in); 
+		while(fin.good()){
+
+			getline(fin, input, '|'); 
+
+			if(input == "[()]" && i == 0){
+				Table q(in);
+				for(int q = 0; q<in.size(); q++)
+					cout << in[q] <<endl;
+
+				in.clear();
+				t = q;
+				i++;
+			}
+			else if(input == "[()]"){ // [()] is the end of line delimeter
+				t.addEntry(in);
+				for(int q = 0; q<in.size(); q++)
+					cout << in[q] <<endl;
+				in.clear();
+			}
+			else
+				in.push_back(input);
+		}
+
+		fin.close();
+		return t;
+	}
 
 #endif
