@@ -184,23 +184,49 @@ bool Insert(vector<Token>& input){//Done
 		return insertee->addEntry(fields);
 	}
 }
-/*Table* Update(vector<Token>& input){
+bool Update(vector<Token>& input){
     Token update('c', "UPDATE");
     if((!Match(input, update))){
         UnEat();
         return NULL;
     }
+	Table* tbl = Identifier(input);
+	if(tbl==NULL) return false;
     Token set('c', "SET");
-    Token where('c', "WHERE");
+	if(!Match(input, set)) return false;
+	vector<string> old_vals;
+	vector<string> new_vals;
     Token comma('h', ",");
     Token eq('o', "=");
-    bool ret = Identifier(input) && Match(input, set)&& Identifier(input) && Match(input, eq) && Identifier(input);
-    while(ret&&Match(input, comma)){
-        ret = ret&& Identifier(input) && Match(input, eq) && Identifier(input);
-    }
-    ret = ret && Match(input, where) && Condition(input);
-    return ret;
-}*/
+	Token tok = Eat(input);
+	if(tok.get_id()!='i') return false;
+	old_vals.push_back(tok.get_val());
+	if(!Match(input, eq)) return false;
+	tok = Eat(input);
+	if(tok.get_id()!='i') return false;
+	new_vals.push_back(tok.get_val());
+	while(Match(input, comma)){
+		tok = Eat(input);
+		if(tok.get_id()!='i') return false;
+		old_vals.push_back(tok.get_val());
+		if(!Match(input, eq)) return false;
+		tok = Eat(input);
+		if(tok.get_id()!='i') return false;		
+		new_vals.push_back(tok.get_val());
+	}
+	
+    Token where('c', "WHERE");
+	if(!Match(input, where)) return false;
+	vector<string> logic = Condition(input);
+	Table current = *tbl;
+	int it = 0;
+	Table* to_update = SelectParse(logic, *tbl, current, it);
+	if(to_update==NULL) return false;
+	for(int i=0; i<to_update->size(); i++){
+		tbl->update(to_update->getRow(i), old_vals, new_vals);
+	}
+
+}
 bool Create(vector<Token>& input){//Finished function
     Token create('c', "CREATE");
     if(!Match(input, create)){
@@ -242,7 +268,7 @@ bool Create(vector<Token>& input){//Finished function
 	temp->show();
 	return true;
 }
-/*bool Delete(vector<Token>& input){
+bool Delete(vector<Token>& input){
     Token delet('c', "DELETE");
     Token from('c', "FROM");
     if(!(Match(input, delet) && Match(input, from))) return false;
@@ -251,8 +277,15 @@ bool Create(vector<Token>& input){//Finished function
     Token where('c', "WHERE");
 	if(!Match(input, where)) return false;
 	vector<string> logic = Condition(input);
-    return ret;
-}*/
+	Table current = *tbl;
+	int it = 0;
+	Table* to_delete = SelectParse(logic, *tbl, current, it);
+	if(to_delete==NULL) return false;
+	for(int i=0; i<to_delete->size(); i++){
+		tbl->removeRow(to_delete->getRow(i));
+	}
+    return true;
+}
 
 
 Table* Atomic(vector<Token>& input){//Alias for expression
@@ -492,8 +525,8 @@ bool Command(vector<Token>& input){//Finished function
 	if(op.get_val().compare("SHOW")==0) return Show(input);
 	if(op.get_val().compare("CREATE")==0) return Create(input);
 	if(op.get_val()=="INSERT") return Insert(input);
-//	if(op.get_val()=="UPDATE") return Update(input);
-//	if(op.get_val()=="DELETE") return Delete(input);
+	if(op.get_val()=="UPDATE") return Update(input);
+	if(op.get_val()=="DELETE") return Delete(input);
 	return false;
 }
 bool Parse(vector<Token>& input){//Finished function
