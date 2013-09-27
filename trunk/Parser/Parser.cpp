@@ -56,6 +56,25 @@ vector<string> Comparison(vector<Token>& input);
 vector<string> Conjunction(vector<Token>& input);
 
 
+Table* SelectParse(vector<string>& logic, Table& begin, Table& curr, int& it){//Probably finished
+	Table* temp = new Table(begin);
+	string name1 = "";
+	for(int i=it; i< logic.size(); i++){
+		if(logic[i]=="(") ++it;
+		else if(logic[i]==")"){ ++it; return temp;}
+		else if(logic[i]=="!="){*temp = *(begin.rowQuerry(logic[i+1], name1, '=')); it+=3; i++;}
+		else if(logic[i]==">"){*temp = *(begin.rowQuerry(logic[i+1], name1, '>')); it+=3; i++;}
+		else if(logic[i]=="=="){*temp = *(begin.rowQuerry(logic[i+1], name1, '=')); it+=3; i++; temp -> show();}
+		else if(logic[i]==">"){*temp = *(begin.rowQuerry(logic[i+1], name1, '<')); it+=3; i++;}
+		else if(logic[i]==">="){*temp = *(begin.rowQuerry(logic[i+1], name1, '>')); temp->setUnion(*(begin.rowQuerry(logic[i+1], name1, '='))); it+=3; i++;}
+		else if(logic[i]=="<="){*temp = *(begin.rowQuerry(logic[i+1], name1, '<')); temp->setUnion(*(begin.rowQuerry(logic[i+1], name1, '='))); it+=3; i++;}
+		else if(logic[i]=="&&"){*temp = *(SelectParse( logic, begin, curr, ++it)); curr.setIntersection(*temp); *temp = curr;}
+		else if(logic[i]=="||"){*temp = *(SelectParse( logic, begin, curr, ++it)); curr.setUnion(*temp); *temp = curr;}
+		else if(i==it) name1 = logic[i];
+		else return NULL;
+	}
+	return NULL;
+}
 
 bool Open(vector<Token>& input){//Opens a Table
     Token op('c', "OPEN");
@@ -231,8 +250,7 @@ bool Create(vector<Token>& input){//Finished function
 	if(tbl==NULL) return false;
     Token where('c', "WHERE");
 	if(!Match(input, where)) return false;
-	
-    bool ret = Match(input, from) && Identifier(input) && Match(input, where) && Condition(input);
+	vector<string> logic = Condition(input);
     return ret;
 }*/
 
@@ -301,25 +319,6 @@ vector<string> Condition(vector<Token>& input){//Finished function
 	ret.push_back( ")");
     if(!Match(input, delimit)) return err;
     return ret;
-}
-Table* SelectParse(vector<string>& logic, Table& begin, Table& curr, int& it){//Probably finished
-	Table* temp = new Table(begin);
-	string name1 = "";
-	for(int i=it; i< logic.size(); i++){
-		if(logic[i]=="(") ++it;
-		else if(logic[i]==")"){ ++it; return temp;}
-		else if(logic[i]=="!="){*temp = *(begin.rowQuerry(logic[i+1], name1, '=')); it+=3; i++;}
-		else if(logic[i]==">"){*temp = *(begin.rowQuerry(logic[i+1], name1, '>')); it+=3; i++;}
-		else if(logic[i]=="=="){*temp = *(begin.rowQuerry(logic[i+1], name1, '=')); it+=3; i++; temp -> show();}
-		else if(logic[i]==">"){*temp = *(begin.rowQuerry(logic[i+1], name1, '<')); it+=3; i++;}
-		else if(logic[i]==">="){*temp = *(begin.rowQuerry(logic[i+1], name1, '>')); temp->setUnion(*(begin.rowQuerry(logic[i+1], name1, '='))); it+=3; i++;}
-		else if(logic[i]=="<="){*temp = *(begin.rowQuerry(logic[i+1], name1, '<')); temp->setUnion(*(begin.rowQuerry(logic[i+1], name1, '='))); it+=3; i++;}
-		else if(logic[i]=="&&"){*temp = *(SelectParse( logic, begin, curr, ++it)); curr.setIntersection(*temp); *temp = curr;}
-		else if(logic[i]=="||"){*temp = *(SelectParse( logic, begin, curr, ++it)); curr.setUnion(*temp); *temp = curr;}
-		else if(i==it) name1 = logic[i];
-		else return NULL;
-	}
-	return NULL;
 }
 
 Table* Selection(vector<Token>& input ){//Finished function
