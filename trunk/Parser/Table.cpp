@@ -141,6 +141,28 @@ class Table{
 		}
 		return return_val;
 	}
+
+	vector< string > removeRow(vector <string> Row){
+		vector<string> return_val;
+		return_val.push_back("");
+		for(int i=0; i< num_entries; i++){
+			bool match = 1;
+			for(int j=0; j<num_fields; j++){
+				if(Data[i][j].compare(Row[j])!=0){
+					match = 0;
+					break;
+				}
+			}
+			if(match){
+				return_val = Data[i];
+				Data.erase(Data.begin()+i);
+				recalc();
+				return return_val;
+
+			}
+		}
+		return return_val;
+	}
 	
 	Table* projection(vector< string > fields){
 		vector<int> columns;
@@ -254,10 +276,29 @@ class Table{
 
 
 
-	bool update(int row, int column, string new_value){//Assign new value to the data entry at row and column
-		if(row>=0 && row< num_entries && column >=0 && column < num_fields) Data[row][column] = new_value;
-		else return false;
-		return true;
+	bool update(vector<string> Row, vector<string> old_values, vector<string> new_values){
+		int row = -1;
+		for(int i=0; i< num_entries; i++){
+			bool match = 1;
+			for(int j=0; j<num_fields; j++){
+				if(Data[i][j].compare(Row[j])!=0){
+					match = 0;
+					break;
+				}
+			}
+			if(match){
+				row = i;
+				break;
+			}
+		}
+		for(int i=0; i<old_values.size(); i++){
+			for(int j; j<num_fields; j++){
+				if(Data[row][j].compare(old_values[i])){
+					Data[row][j] = new_values[i];
+					break;
+				}
+			}
+		}
 	}
 	bool update(string Key, string Field, string new_value){//Assign new value to the data entry with Key and Field
 		int row = -1, column = -1;
