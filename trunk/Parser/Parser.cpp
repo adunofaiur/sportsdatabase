@@ -533,6 +533,7 @@ bool Parse(vector<Token>& input){//Finished function
 //		for(int i=0; i<input.size(); i++){
 //			cout<<"TOKEN"<<i<<" :  {"<<input[i].get_id()<<", "<<input[i].get_val()<<"}\n";
 //		}
+	iter =0;
 	if(input[0].get_id() == 'c') return Command(input);
 	else return Querry(input);
 }
