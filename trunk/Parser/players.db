@@ -1,0 +1,101 @@
+PLAYER|NUMBER|POSITION|HEIGHT|WEIGHT|SPONSOR|TEAM|[()]|
+Johnson,Andre|80|Wide Receiver|6-3|230|Nike|Texans|[()]|
+Schaub,Matt|8|Quarterback|6-5|235|Under Armour|Texans|[()]|
+Watt,J.J.|99|Defensive End|6-5|289|Nike|Texans|[()]|
+Yates,T.J.|13|Quarterback|6-4|217|Under Armour|Texans|[()]|
+Foster,Arian|23|Running Back|6-1|227|Nike|Texans|[()]|
+Keenum,Case|7|Quarterback|6-1|205|Adidas|Texans|[()]|
+Bullock,Randy|4|Kicker|5-9|206|Nike|Texans|[()]|
+Cushing,Brian|56|Linebacker|6-3|249|Under Armour|Texans|[()]|
+Lechler,Shane|9|Punter|6-2|237|Adidas|Texans|[()]|
+Tate,Ben|44|Running Back|5-11|212|Rawlings|Texans|[()]|
+Bennett,Michael|72|Defensive End|6-4|274|Rawlings|Seahawks|[()]|
+Bryant,Red|79|Defensive End|6-4|323|Nike|Seahawks|[()]|
+Michael,Christine|33|Running Back|5-10|221|Adidas|Seahawks|[()]|
+Wilson,Russell|3|Quarterback|5-11|206|Nike|Seahawks|[()]|
+Unger,Max|60|Center|6-5|305|Rawlings|Seahawks|[()]|
+Hauschka,Steven|4|Kicker|6-4|210|Adidas|Seahawks|[()]|
+Thomas,Earl|29|Safety|5-10|Nike|Seahawks|[()]|
+Sherman,Richard|25|Cornerback|6-3|Under Armour|Seahawks|[()]|
+Carpenter,James|77|Guard|6-5|321|Rawlings|Seahawks|[()]|
+Farwell,Heath|55|Linebacker|6-0|235|Nike|Seahawks|[()]|
+Tannehill,Ryan|17|Quarterback|6-4|222|Adidas|Dolphins|[()]|
+Wallace,Mike|11|Wide Receiver|6-0|199|Under Armour|Dolphins|[()]|
+Martin,Jonathan|71|Tackle|6-5|312|Rawlings|Dolphins|[()]|
+Misi,Koa|55|Linebacker|6-1|302|Adidas|Dolphins|[()]|
+Egner,Michael|84|Tight End|6-5|255|Adidas|Dolphins|[()]|
+Odrick,Jared|98|Defensive End|6-5|302|Nike|Dolphins|[()]|
+Clemons,Chris|30|Safety|6-1|214|Under Armour|Dolphins|[()]|
+Moore,Matt|8|Quarterback|6-3|216|Nike|Dolphins|[()]|
+Grimes,Brent|21|Cornerback|5-10|183|Adidas|Dolphins|[()]|
+Miller,Lamar|26|Running Back|5-10|218|Under Armour|Dolphins|[()]|
+Ponder,Christian|7|Quarterback|6-2|229|Nike|Vikings|[()]|
+Peterson,Adrian|28|Running Back|6-1|217|Adidas|Vikings|[()]|
+Webb,Joe|14|Wide Receiver|6-4|220|Adidas|Vikings|[()]|
+Sullivan,John|65|Center|6-4|301|Nike|Vikings|[()]|
+Robison,Brian|96|Defensive End|6-3|259|Adidas|Vikings|[()]|
+Robinson,Josh|21|Cornerback|5-10|199|Nike|Vikings|[()]|
+Henderson,Erin|50|Linebacker|6-3|244|Adidas|Vikings|[()]|
+Gerhart,Toby|32|Running Back|6-0|231|Nike|Vikings|[()]|
+Sendejo,Andrew|34|Safety|6-1|225|Adidas|Vikings|[()]|
+Ellison,Rhett|40|Tight End|6-5|250|Nike|Vikings|[()]|
+Allen,Will|26|Safety|6-1|203|Adidas|Cowboys|[()]|
+Arkin,David|62|Guard|6-5|310|Nike|Cowboys|[()]|
+Austin,Miles|19|Wide Receiver|6-2|216|Adidas|Cowboys|[()]|
+Bailey,Dan|5|Kicker|6-0|191|Nike|Cowboys|[()]|
+Beasley,Cole|11|Wide Receiver|5-8|180|Rawlings|Cowboys|[()]|
+Bernadeau,Mackenzy|73|Guard|6-4|333|Rawlings|Cowboys|[()]|
+Bosworth,Kyle|58|Linebacker|6-1|236|Nike|Cowboys|[()]|
+Bryant,Dez|88|Wide Receiver|6-2|222|Adidas|Cowboys|[()]|
+Carr,Brandon|39|Cornerback|6-0|206|Rawlings|Cowboys|[()]|
+Romo,Tony|9|RQuarterback|6-2|230|Nike|Cowboys|[()]|
+Asomugha,Nnamdi|28|Cornerback|6-2|210|Rawlings|49ers|[()]|
+Baldwin,Jon|84|Wide Receiver|6-4|230|Nike|49ers|[()]|
+Boldin,Anquan|81|Wide Receiver|6-1|220|Rawlings|49ers|[()]|
+Boone,Alex|75|Guard|6-8|300|Under Armour|49ers|[()]|
+Bowman,NaVorro|53|Linebacker|6-0|242|Nike|49ers|[()]|
+Brock,Tramaine|26|Cornerback|5-10|197|Rawlings|49ers|[()]|
+Brooks,Ahmad|55|Linebacker|6-3|259|Under Armour|49ers|[()]|
+Brown,Tarell|25|Cornerback|5-10|193|Under Armour|49ers|[()]|
+Celek,Garrett|88|Tight End|6-5|252|Under Armour|49ers|[()]|
+Kaepernick,Colin|7|Quarterback|6-4|230|Under Armour|49ers|[()]|
+Adams,Mike|20|Safety|5-11|200|Under Armour|Broncos|[()]|
+Anderson,C.J.|22|Running Back|5-8|224|Nike|Broncos|[()]|
+Ayers,Robert|91|Defensive End|6-3|274|Under Armour|Broncos|[()]|
+Bailey,Champ|24|Cornerback|6-0|192|Nike|Broncos|[()]|
+Ball,Montee|28|Running Back|5-10|215|Under Armour|Broncos|[()]|
+Beadles,Zane|68|Guard|6-4|305|Rawlings|Broncos|[()]|
+Bolden,Omar|31|Safety|5-10|195|Nike|Broncos|[()]|
+Ihenacho,Duke|33|Safety|6-1|207|Rawlings|Broncos|[()]|
+Johnson,Steven|53|Linebacker|6-1|237|Nike|Broncos|[()]|
+Manning,Peyton|18|Quarterback|6-5|230|Nike|Broncos|[()]|
+Bakhtiari,David|69|Tackle|6-4|300|Under Armour|Packers|[()]|
+Barrington,Sam|58|Linebacker|6-1|235|Nike|Packers|[()]|
+Hyde,Micah|33|Cornerback|6-0|197|Under Armour|Packers|[()]|
+Banjo,Chris|32|Safety|5-10|207|Nike|Packers|[()]|
+Boykin,Jarrett|1|Wide Receiver|6-2|218|Nike|Packers|[()]|
+Cobb,Randall|18|Wide Receiver|5-10|192|Under Armour|Packers|[()]|
+Perry,Nick|53|Linebacker|6-3|265|Nike|Packers|[()]|
+Rodgers,Aaron|12|Quarterback|6-2|225|Adidas|Packers|[()]|
+Finley,Jermichael|88|Tight End|6-5|247|Under Armour|Packers|[()]|
+Jolly,Johnny|97|Defensive Tackle|6-3|325|Under Armour|Packers|[()]|
+Smith,Geno|7|Quarterback|6-3|Under Armour|Jets|[()]|
+Milliner,Dee|27|Cornerback|6-0|201|Rawlings|Jets|[()]|
+Winters,Brian|67|Guard|6-4|320|Under Armour|Jets|[()]|
+Aboushi,Oday|75|Offensive Lineman|6-5|308|Nike|Jets|[()]|
+Campbell,William|65|Guard|6-4|311|Nike|Jets|[()]|
+Hill,Stephen|84|Wide Receiver|6-4|215|Nike|Jets|[()]|
+Richardson,Sheldon|91|Defensive Lineman|6-3|294|Nike|Jets|[()]|
+Spadola,Ryan|85|Wide Receiver|6-3|200|Nike|Jets|[()]|
+Bellore,Nick|54|Linebacker|6-1|250|Nike|Jets|[()]|
+Obomanu,Ben|15|Wide Receiver|6-1|204|Under Armour|Jets|[()]|
+Washington,Leon|33|Running Back|5-8|192|Nike|Patriots|[()]|
+Arrington,Kyle|25|Cornerback|5-10|190|Adidas|Patriots|[()]|
+Edelman,Julian|11|Wide Receiver|5-10|198|Nike|Patriots|[()]|
+Gregory,Steve|28|Safety|5-11|200|Nike|Patriots|[()]|
+Spikes,Brandon|55|Linebacker|6-2|255|Nike|Patriots|[()]|
+Brady,Tom|12|Quarterback|6-4|225|Nike|Patriots|[()]|
+Hoomanawanui,Michael|47|Tight End|6-4|260|Nike|Patriots|[()]|
+Mankins,Logan|70|Guard|6-4|308|Adidas|Patriots|[()]|
+Cannon,Marcus|61|Offensive Lineman|6-5|335|Adidas|Patriots|[()]|
+Jones,Chandler|95|Defensive End|6-5|265|Adidas|Patriots|[()]|
