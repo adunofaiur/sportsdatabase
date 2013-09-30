@@ -64,7 +64,7 @@ Table* SelectParse(vector<string>& logic, Table& begin, Table& curr, int& it){//
 		else if(logic[i]==")"){ ++it; return temp;}
 		else if(logic[i]=="!="){*temp = *(begin.rowQuerry(logic[i+1], name1, '=')); it+=3; i++;}
 		else if(logic[i]==">"){*temp = *(begin.rowQuerry(logic[i+1], name1, '>')); it+=3; i++;}
-		else if(logic[i]=="=="){*temp = *(begin.rowQuerry(logic[i+1], name1, '=')); it+=3; i++;}
+		else if(logic[i]=="=="){*temp = *(begin.rowQuerry(logic[i+1], name1, '=')); it+=3; i++; temp -> show();}
 		else if(logic[i]==">"){*temp = *(begin.rowQuerry(logic[i+1], name1, '<')); it+=3; i++;}
 		else if(logic[i]==">="){*temp = *(begin.rowQuerry(logic[i+1], name1, '>')); temp->setUnion(*(begin.rowQuerry(logic[i+1], name1, '='))); it+=3; i++;}
 		else if(logic[i]=="<="){*temp = *(begin.rowQuerry(logic[i+1], name1, '<')); temp->setUnion(*(begin.rowQuerry(logic[i+1], name1, '='))); it+=3; i++;}
@@ -192,7 +192,7 @@ bool Update(vector<Token>& input){
     }
 	Table* tbl = Identifier(input);
 	if(tbl==NULL) return false;
-    Token set('i', "SET");
+    Token set('c', "SET");
 	if(!Match(input, set)) return false;
 	vector<string> old_vals;
 	vector<string> new_vals;
@@ -213,7 +213,7 @@ bool Update(vector<Token>& input){
 		tok = Eat(input);
 		if(tok.get_id()!='i') return false;		
 		new_vals.push_back(tok.get_val());
-	}UnEat();
+	}
 	
     Token where('c', "WHERE");
 	if(!Match(input, where)) return false;
@@ -225,7 +225,7 @@ bool Update(vector<Token>& input){
 	for(int i=0; i<to_update->size(); i++){
 		tbl->update(to_update->getRow(i), old_vals, new_vals);
 	}
-	return true;
+
 }
 bool Create(vector<Token>& input){//Finished function
     Token create('c', "CREATE");
@@ -530,9 +530,9 @@ bool Command(vector<Token>& input){//Finished function
 	return false;
 }
 bool Parse(vector<Token>& input){//Finished function
-		for(int i=0; i<input.size(); i++){
-			cout<<"TOKEN"<<i<<" :  {"<<input[i].get_id()<<", "<<input[i].get_val()<<"}\n";
-		}
+//		for(int i=0; i<input.size(); i++){
+//			cout<<"TOKEN"<<i<<" :  {"<<input[i].get_id()<<", "<<input[i].get_val()<<"}\n";
+//		}
 	if(input[0].get_id() == 'c') return Command(input);
 	else return Querry(input);
 }
@@ -541,15 +541,160 @@ bool Parse(vector<Token>& input){//Finished function
 #endif
 
 int main(){
-	while(true){
-		iter = 0;
-		cout<<"Please give your input: \n";
-		string input;
-		getline(cin, input);
-		vector<Token> toks = tokenize(input);
-		bool result = Parse(toks);
-		if(!result) cout<<"Fail.\n";
-		else cout<<"Success!\n";
-		if(toks[0].get_val()=="EXIT") break;
-	}
+
+		cout << "Welcome to the database app.\n";
+		cout << "You may use either SQL query language or the following command menu.\n";
+		cout << "Please don't use spaces in fields\n(you may only create a table with the query language)\n";
+	
+		//Load relevant tables
+		string table_command;
+		vector<Token> tokens;
+		
+		table_command = "OPEN players";
+		tokens = tokenize(table_command);
+		Parse(tokens);
+		
+		table_command = "OPEN teams";
+		tokens = tokenize(table_command);
+		Parse(tokens);
+		
+		
+		table_command = "OPEN sponsors";
+		tokens = tokenize(table_command);
+		Parse(tokens);
+		bool go_on = true;
+		while(go_on){
+		
+			iter = 0;
+			cout<<"Give your menu option: \n";
+			int input;
+			cin >> input;
+			//Switch between -
+			/*
+				Add player     1
+				Add sponsor    2
+				Add team       3
+				remove pst      4, 5, 6  
+				Update pst	   7, 8, 9
+				List pst        10, 11, 12
+				Search player (name, team) 13
+				Search team (sponsor) 14
+				Show  players by team - 15
+				Exit - 16
+			*/
+			
+			
+			switch(input){
+				case 1:{
+				cout << "Enter: 'NAME NUMBER POSITION HEIGHT WEIGHT SPONSOR TEAM'\n";
+				string inp;
+				getline(cin, inp);
+				
+				table_command = "INSERT INTO players VALUES FROM ( " + (cin >> inp) + ", ";
+				table_command += (cin >> inp) + ", " + (cin >> inp) + ", " + (cinn >> inp) + (cin >> inp) + ", ";
+				table_command += (cin >> inp) + ", " + (cin >> inp) + " )";
+				tokens = tokenize(table_command);
+				bool success = Parse(tokens);
+				
+					break;
+					}
+				case 2:{
+				cout << "Enter: 'SPONSOR LOCATION PRODUCT'\n";
+				string inp;
+				getline(cin, inp);
+				
+				table_command = "INSERT INTO sponsors VALUES FROM ( " + (cin >> inp) + ", ";
+				table_command += (cin >> inp) + ", " + (cin >> inp) +  " )";
+				tokens = tokenize(table_command);
+				bool success = Parse(tokens);
+				
+					break;
+					}
+				case 3:{
+					break;
+					}
+				case 4:{
+					break;
+					}
+				case 5:{
+					break;
+					}
+				case 6:{
+					break;
+					}
+				case 7:{
+					break;
+					}
+				case 8:{
+					break;
+					}
+				case 9:{
+					break;
+					}
+				case 10:{
+					break;
+					}
+				case 11:{
+					break;
+					}
+				case 12:{
+					break;
+					}
+				case 13:{
+					break;
+					}
+				case 14:{
+					break;
+					}
+				case 15:{
+					break;
+					}
+				case 16:{
+					go_on = false;
+					break;
+					}
+				default:
+					cout << "That's not really on the menu...\n";
+			
+			
+			}
+		
+		
+		
+		
+		
+		
+		}
+			
+		table_command = "WRITE players";
+		tokens = tokenize(table_command);
+		Parse(tokens);
+		
+		table_command = "WRITE teams";
+		tokens = tokenize(table_command);
+		Parse(tokens);
+		
+		
+		table_command = "WRITE sponsors";
+		tokens = tokenize(table_command);
+		Parse(tokens);
+		
+		table_command = "CLOSE players";
+		tokens = tokenize(table_command);
+		Parse(tokens);
+		
+		table_command = "CLOSE teams";
+		tokens = tokenize(table_command);
+		Parse(tokens);
+		
+		
+		table_command = "CLOSE sponsors";
+		tokens = tokenize(table_command);
+		Parse(tokens);
+		
+		table_command = "EXIT";
+		tokens = tokenize(table_command);
+		Parse(tokens);
+		
+		
 }
