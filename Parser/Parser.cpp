@@ -64,7 +64,7 @@ Table* SelectParse(vector<string>& logic, Table& begin, Table& curr, int& it){//
 		else if(logic[i]==")"){ ++it; return temp;}
 		else if(logic[i]=="!="){*temp = *(begin.rowQuerry(logic[i+1], name1, '=')); it+=3; i++;}
 		else if(logic[i]==">"){*temp = *(begin.rowQuerry(logic[i+1], name1, '>')); it+=3; i++;}
-		else if(logic[i]=="=="){*temp = *(begin.rowQuerry(logic[i+1], name1, '=')); it+=3; i++; temp -> show();}
+		else if(logic[i]=="=="){*temp = *(begin.rowQuerry(logic[i+1], name1, '=')); it+=3; i++;}
 		else if(logic[i]==">"){*temp = *(begin.rowQuerry(logic[i+1], name1, '<')); it+=3; i++;}
 		else if(logic[i]==">="){*temp = *(begin.rowQuerry(logic[i+1], name1, '>')); temp->setUnion(*(begin.rowQuerry(logic[i+1], name1, '='))); it+=3; i++;}
 		else if(logic[i]=="<="){*temp = *(begin.rowQuerry(logic[i+1], name1, '<')); temp->setUnion(*(begin.rowQuerry(logic[i+1], name1, '='))); it+=3; i++;}
@@ -192,7 +192,7 @@ bool Update(vector<Token>& input){
     }
 	Table* tbl = Identifier(input);
 	if(tbl==NULL) return false;
-    Token set('c', "SET");
+    Token set('i', "SET");
 	if(!Match(input, set)) return false;
 	vector<string> old_vals;
 	vector<string> new_vals;
@@ -213,7 +213,7 @@ bool Update(vector<Token>& input){
 		tok = Eat(input);
 		if(tok.get_id()!='i') return false;		
 		new_vals.push_back(tok.get_val());
-	}
+	}UnEat();
 	
     Token where('c', "WHERE");
 	if(!Match(input, where)) return false;
@@ -225,7 +225,7 @@ bool Update(vector<Token>& input){
 	for(int i=0; i<to_update->size(); i++){
 		tbl->update(to_update->getRow(i), old_vals, new_vals);
 	}
-
+	return true;
 }
 bool Create(vector<Token>& input){//Finished function
     Token create('c', "CREATE");
@@ -530,9 +530,9 @@ bool Command(vector<Token>& input){//Finished function
 	return false;
 }
 bool Parse(vector<Token>& input){//Finished function
-//		for(int i=0; i<input.size(); i++){
-//			cout<<"TOKEN"<<i<<" :  {"<<input[i].get_id()<<", "<<input[i].get_val()<<"}\n";
-//		}
+		for(int i=0; i<input.size(); i++){
+			cout<<"TOKEN"<<i<<" :  {"<<input[i].get_id()<<", "<<input[i].get_val()<<"}\n";
+		}
 	if(input[0].get_id() == 'c') return Command(input);
 	else return Querry(input);
 }

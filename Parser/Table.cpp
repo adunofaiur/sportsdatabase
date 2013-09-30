@@ -276,7 +276,7 @@ class Table{
 
 
 
-	bool update(vector<string> Row, vector<string> old_values, vector<string> new_values){
+	bool update(vector<string> Row, vector<string> fields, vector<string> new_values){
 		int row = -1;
 		for(int i=0; i< num_entries; i++){
 			bool match = 1;
@@ -286,19 +286,21 @@ class Table{
 					break;
 				}
 			}
-			if(match){
+			if(match == 1){
 				row = i;
 				break;
 			}
 		}
-		for(int i=0; i<old_values.size(); i++){
-			for(int j; j<num_fields; j++){
-				if(Data[row][j].compare(old_values[i])){
+		if(row==-1) return false;
+		for(int i=0; i<fields.size(); i++){
+			for(int j=0; j< num_fields; j++){
+				if(Data[0][j].compare(fields[i])==0){
 					Data[row][j] = new_values[i];
 					break;
 				}
 			}
 		}
+		return true;
 	}
 	bool update(string Key, string Field, string new_value){//Assign new value to the data entry with Key and Field
 		int row = -1, column = -1;
