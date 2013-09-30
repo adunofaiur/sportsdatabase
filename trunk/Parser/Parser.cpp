@@ -552,16 +552,17 @@ int main(){
 		
 		table_command = "OPEN players";
 		tokens = tokenize(table_command);
-		Parse(tokens);
-		
+		bool maybe = Parse(tokens);
+		cout << maybe << "\n";
 		table_command = "OPEN teams";
 		tokens = tokenize(table_command);
-		Parse(tokens);
-		
+		maybe = Parse(tokens);
+		cout << maybe << "\n";
 		
 		table_command = "OPEN sponsors";
 		tokens = tokenize(table_command);
-		Parse(tokens);
+		maybe = Parse(tokens);
+		cout << maybe << "\n";
 		bool go_on = true;
 		while(go_on){
 		
@@ -580,64 +581,210 @@ int main(){
 				Search player (name, team) 13
 				Search team (sponsor) 14
 				Show  players by team - 15
-				Exit - 16
+				SQP - 16
+				Exit - 17
+				
 			*/
 			
 			
 			switch(input){
 				case 1:{
 				cout << "Enter: 'NAME NUMBER POSITION HEIGHT WEIGHT SPONSOR TEAM'\n";
-				string inp;
-				getline(cin, inp);
-				
-				table_command = "INSERT INTO players VALUES FROM ( " + (cin >> inp) + ", ";
-				table_command += (cin >> inp) + ", " + (cin >> inp) + ", " + (cinn >> inp) + (cin >> inp) + ", ";
-				table_command += (cin >> inp) + ", " + (cin >> inp) + " )";
+				vector<string> values;
+				string temp;
+				for(int i=0; i<7; i++){
+					cin	>> temp;
+					values.push_back(temp);
+				}
+				table_command = "INSERT INTO players VALUES FROM ( " + values[0] + ", ";
+				table_command += (values[1]) + ", " + (values[2]) + ", " + (values[3]) + (values[4]) + ", ";
+				table_command += (values[5]) + ", " + (values[6]) + " )";
 				tokens = tokenize(table_command);
 				bool success = Parse(tokens);
-				
+				if(success){
+					cout << "Success!\n";
+				}else{
+				cout << "Fail\n";
+				}
 					break;
 					}
 				case 2:{
 				cout << "Enter: 'SPONSOR LOCATION PRODUCT'\n";
-				string inp;
-				getline(cin, inp);
-				
-				table_command = "INSERT INTO sponsors VALUES FROM ( " + (cin >> inp) + ", ";
-				table_command += (cin >> inp) + ", " + (cin >> inp) +  " )";
+				vector<string> values;
+				string temp;
+				for(int i=0; i<3; i++){
+					cin	>> temp;
+					values.push_back(temp);
+				}
+				table_command = "INSERT INTO players VALUES FROM ( " + values[0] + ", ";
+				table_command += (values[1]) + ", " + (values[2]) + ", " + (values[3]) + " )";
 				tokens = tokenize(table_command);
 				bool success = Parse(tokens);
-				
+				if(success){
+					cout << "Success!\n";
+				}else{
+				cout << "Fail\n";
+				}
 					break;
 					}
 				case 3:{
+						cout << "Enter: 'TEAM LOCATION SPONSOR'\n";
+				vector<string> values;
+				string temp;
+				for(int i=0; i<3; i++){
+					cin	>> temp;
+					values.push_back(temp);
+				}
+				table_command = "INSERT INTO players VALUES FROM ( " + values[0] + ", ";
+				table_command += (values[1]) + ", " + (values[2]) + ", " + (values[3]) + " )";
+				tokens = tokenize(table_command);
+				bool success = Parse(tokens);
+				if(success){
+					cout << "Success!\n";
+				}else{
+				cout << "Fail\n";
+				}
 					break;
 					}
 				case 4:{
+					cout << "Give the name of the player you want to delete: \n";
+					string temp;
+					cin >> temp;
+					table_command = "DELETE FROM players WHERE (PLAYER = " + temp + " )";
+					tokens = tokenize(table_command);
+					bool success = Parse(tokens);
+				if(success){
+					cout << "Success!\n";
+				}else{
+				cout << "Fail\n";
+				}
 					break;
 					}
 				case 5:{
+					cout << "Give the name of the team you want to delete: \n";
+					string temp;
+					cin >> temp;
+					table_command = "DELETE FROM players WHERE (PLAYER = " + temp + " )";
+					tokens = tokenize(table_command);
+					bool success = Parse(tokens);
+				if(success){
+					cout << "Success!\n";
+				}else{
+				cout << "Fail\n";
+				}
 					break;
 					}
 				case 6:{
+					cout << "Give the name of the sponsor you want to delete: \n";
+					string temp;
+					cin >> temp;
+					table_command = "DELETE FROM players WHERE (PLAYER = " + temp + " )";
+					tokens = tokenize(table_command);
+					bool success = Parse(tokens);
+				if(success){
+					cout << "Success!\n";
+				}else{
+				cout << "Fail\n";
+				}
 					break;
 					}
 				case 7:{
+					cout << "Give the name of the player you're updating: \n";
+					string who;
+					cin >> who;
+					cout << "Enter their new Team.\n";
+					
+					vector<string> values;
+					string temp;
+					for(int i=0; i<1; i++){
+						cin	>> temp;
+						values.push_back(temp);
+					}
+					table_command = "UPDATE players SET TEAM = " + values[0] + " WHERE ( PLAYER = " + who + " )";					
+					tokens = tokenize(table_command);
+					bool success = Parse(tokens);
+				if(success){
+					cout << "Success!\n";
+				}else{
+				cout << "Fail\n";
+				}
 					break;
 					}
 				case 8:{
+				cout << "Give the name of the team you're updating: \n";
+					string who;
+					cin >> who;
+					cout << "Enter their new Sponsor.\n";
+					
+					vector<string> values;
+					string temp;
+					for(int i=0; i<1; i++){
+						cin	>> temp;
+						values.push_back(temp);
+					}
+					table_command = "UPDATE teams SET SPONSOR = " + values[0] + " WHERE ( TEAM = " + who + " )";					
+					tokens = tokenize(table_command);
+					bool success = Parse(tokens);
+				if(success){
+					cout << "Success!\n";
+				}else{
+				cout << "Fail\n";
+				}
 					break;
 					}
 				case 9:{
+				cout << "Give the name of the Sponsor you're updating: \n";
+					string who;
+					cin >> who;
+					cout << "Enter their new Product.\n";
+					
+					vector<string> values;
+					string temp;
+					for(int i=0; i<1; i++){
+						cin	>> temp;
+						values.push_back(temp);
+					}
+					table_command = "UPDATE sponsors SET PRODUCT = " + values[0] + " WHERE ( SPONSOR = " + who + " )";					
+					tokens = tokenize(table_command);
+					bool success = Parse(tokens);
+				if(success){
+					cout << "Success!\n";
+				}else{
+				cout << "Fail\n";
+				}
 					break;
 					}
 				case 10:{
+					table_command = "SHOW players";
+					tokens = tokenize(table_command);
+					bool success = Parse(tokens);
+				if(success){
+					cout << "Success!\n";
+				}else{
+				cout << "Fail\n";
+				}
 					break;
 					}
 				case 11:{
+					table_command = "SHOW teams";
+					tokens = tokenize(table_command);
+					bool success = Parse(tokens);
+				if(success){
+					cout << "Success!\n";
+				}else{
+				cout << "Fail\n";
+				}
 					break;
 					}
 				case 12:{
+					table_command = "SHOW sponsors";
+					tokens = tokenize(table_command);
+					bool success = Parse(tokens);
+				if(success){
+					cout << "Success!\n";
+				}else{
+				cout << "Fail\n";
+				}
 					break;
 					}
 				case 13:{
@@ -650,6 +797,17 @@ int main(){
 					break;
 					}
 				case 16:{
+					getline(cin, table_command);
+					tokens = tokenize(table_command);
+					bool success = Parse(tokens);
+				if(success){
+					cout << "Success!\n";
+				}else{
+				cout << "Fail\n";
+				}
+					break;
+					}	
+				case 17:{
 					go_on = false;
 					break;
 					}
