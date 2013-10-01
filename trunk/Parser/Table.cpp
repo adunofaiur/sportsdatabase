@@ -167,8 +167,8 @@ class Table{
 	Table* projection(vector< string > fields){
 		vector<int> columns;
 		for(int i =0; i<fields.size(); i++){
-			for(int j=0; j<num_fields; i++){
-				if (Data[0][j].compare(fields[i])){ //Found a column
+			for(int j=0; j<num_fields; j++){
+				if (Data[0][j]==fields[i]){ //Found a column
 					columns.push_back(j);
 					break;
 				}
