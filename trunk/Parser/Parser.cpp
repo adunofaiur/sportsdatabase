@@ -533,7 +533,7 @@ bool Parse(vector<Token>& input){//Finished function
 //		for(int i=0; i<input.size(); i++){
 //			cout<<"TOKEN"<<i<<" :  {"<<input[i].get_id()<<", "<<input[i].get_val()<<"}\n";
 //		}
-	iter =0;
+    iter = 0;
 	if(input[0].get_id() == 'c') return Command(input);
 	else return Querry(input);
 }
@@ -542,7 +542,7 @@ bool Parse(vector<Token>& input){//Finished function
 #endif
 
 int main(){
-
+iter = 0;
 		cout << "Welcome to the database app.\n";
 		cout << "You may use either SQL query language or the following command menu.\n";
 		cout << "Please don't use spaces in fields\n(you may only create a table with the query language)\n";
@@ -551,11 +551,11 @@ int main(){
 		string table_command;
 		vector<Token> tokens;
 		
-		table_command = "OPEN players";
+		table_command = "OPEN players;";
 		tokens = tokenize(table_command);
 		bool maybe = Parse(tokens);
 		cout << maybe << "\n";
-		table_command = "OPEN teams";
+		table_command = "OPEN teams;";
 		tokens = tokenize(table_command);
 		maybe = Parse(tokens);
 		cout << maybe << "\n";
@@ -565,9 +565,28 @@ int main(){
 		maybe = Parse(tokens);
 		cout << maybe << "\n";
 		bool go_on = true;
+    
+    
+    
+        cout << "1  - Add player\n";
+        cout << "2  - Add team\n";
+        cout << "3  - Add sponsor\n";
+        cout << "4  - Remove player\n";
+        cout << "5  - Remove team\n";
+        cout << "6  - Remove sponsor\n";
+        cout << "7  - Update player\n";
+        cout << "8  - Update team\n";
+        cout << "9  - Update sponsor\n";
+        cout << "10 - Show all players\n";
+        cout << "11 - Show all teams\n";
+        cout << "12 - Show all sponsors\n";
+        cout << "13 - Show player\n";
+        cout << "14 - Show teams by sponsor\n";
+        cout << "15 - Show players on team\n";
+        cout << "16 - Show the hometowns of all teams\n";
 		while(go_on){
 		
-			iter = 0;
+			cout << "1 - Add player\n";
 			cout<<"Give your menu option: \n";
 			int input;
 			cin >> input;
@@ -579,8 +598,8 @@ int main(){
 				remove pst      4, 5, 6  
 				Update pst	   7, 8, 9
 				List pst        10, 11, 12
-				Search player (name, team) 13
-				Search team (sponsor) 14
+				show player (name, team) 13
+				show team (sponsor) 14
 				Show  players by team - 15
 				SQP - 16
 				Exit - 17
@@ -609,26 +628,8 @@ int main(){
 				}
 					break;
 					}
+				
 				case 2:{
-				cout << "Enter: 'SPONSOR LOCATION PRODUCT'\n";
-				vector<string> values;
-				string temp;
-				for(int i=0; i<3; i++){
-					cin	>> temp;
-					values.push_back(temp);
-				}
-				table_command = "INSERT INTO players VALUES FROM ( " + values[0] + ", ";
-				table_command += (values[1]) + ", " + (values[2]) + ", " + (values[3]) + " )";
-				tokens = tokenize(table_command);
-				bool success = Parse(tokens);
-				if(success){
-					cout << "Success!\n";
-				}else{
-				cout << "Fail\n";
-				}
-					break;
-					}
-				case 3:{
 						cout << "Enter: 'TEAM LOCATION SPONSOR'\n";
 				vector<string> values;
 				string temp;
@@ -636,7 +637,7 @@ int main(){
 					cin	>> temp;
 					values.push_back(temp);
 				}
-				table_command = "INSERT INTO players VALUES FROM ( " + values[0] + ", ";
+				table_command = "INSERT INTO teams VALUES FROM ( " + values[0] + ", ";
 				table_command += (values[1]) + ", " + (values[2]) + ", " + (values[3]) + " )";
 				tokens = tokenize(table_command);
 				bool success = Parse(tokens);
@@ -647,11 +648,30 @@ int main(){
 				}
 					break;
 					}
+                case 3:{
+                    cout << "Enter: 'SPONSOR LOCATION PRODUCT'\n";
+                    vector<string> values;
+                    string temp;
+                    for(int i=0; i<3; i++){
+                        cin	>> temp;
+                        values.push_back(temp);
+                    }
+                    table_command = "INSERT INTO sponsors VALUES FROM ( " + values[0] + ", ";
+                    table_command += (values[1]) + ", " + (values[2]) + ", " + (values[3]) + " )";
+                    tokens = tokenize(table_command);
+                    bool success = Parse(tokens);
+                    if(success){
+                        cout << "Success!\n";
+                    }else{
+                        cout << "Fail\n";
+                    }
+					break;
+                }
 				case 4:{
 					cout << "Give the name of the player you want to delete: \n";
 					string temp;
 					cin >> temp;
-					table_command = "DELETE FROM players WHERE (PLAYER = " + temp + " )";
+					table_command = "DELETE FROM players WHERE (PLAYER == " + temp + " )";
 					tokens = tokenize(table_command);
 					bool success = Parse(tokens);
 				if(success){
@@ -665,7 +685,7 @@ int main(){
 					cout << "Give the name of the team you want to delete: \n";
 					string temp;
 					cin >> temp;
-					table_command = "DELETE FROM players WHERE (PLAYER = " + temp + " )";
+					table_command = "DELETE FROM teams WHERE (TEAM == " + temp + " )";
 					tokens = tokenize(table_command);
 					bool success = Parse(tokens);
 				if(success){
@@ -679,7 +699,7 @@ int main(){
 					cout << "Give the name of the sponsor you want to delete: \n";
 					string temp;
 					cin >> temp;
-					table_command = "DELETE FROM players WHERE (PLAYER = " + temp + " )";
+					table_command = "DELETE FROM sponsors WHERE (SPONSOR == " + temp + " )";
 					tokens = tokenize(table_command);
 					bool success = Parse(tokens);
 				if(success){
@@ -701,7 +721,7 @@ int main(){
 						cin	>> temp;
 						values.push_back(temp);
 					}
-					table_command = "UPDATE players SET TEAM = " + values[0] + " WHERE ( PLAYER = " + who + " )";					
+					table_command = "UPDATE players SET TEAM = " + values[0] + " WHERE ( PLAYER == " + who + " )";					
 					tokens = tokenize(table_command);
 					bool success = Parse(tokens);
 				if(success){
@@ -723,7 +743,7 @@ int main(){
 						cin	>> temp;
 						values.push_back(temp);
 					}
-					table_command = "UPDATE teams SET SPONSOR = " + values[0] + " WHERE ( TEAM = " + who + " )";					
+					table_command = "UPDATE teams SET SPONSOR = " + values[0] + " WHERE ( TEAM == " + who + " )";					
 					tokens = tokenize(table_command);
 					bool success = Parse(tokens);
 				if(success){
@@ -745,7 +765,7 @@ int main(){
 						cin	>> temp;
 						values.push_back(temp);
 					}
-					table_command = "UPDATE sponsors SET PRODUCT = " + values[0] + " WHERE ( SPONSOR = " + who + " )";					
+					table_command = "UPDATE sponsors SET PRODUCT = " + values[0] + " WHERE ( SPONSOR == " + who + " )";					
 					tokens = tokenize(table_command);
 					bool success = Parse(tokens);
 				if(success){
@@ -789,15 +809,87 @@ int main(){
 					break;
 					}
 				case 13:{
+					cout << "Enter which team the players should be from: \n";
+					string inp;
+					cin >> inp;
+					table_command = "temp_play <- select ( TEAM == " + inp + " ) players";
+					tokens = tokenize(table_command);
+					bool success = Parse(tokens);
+					table_command = "SHOW temp_play";
+					tokens = tokenize(table_command);
+				    success = Parse(tokens);
+				if(success){
+					cout << "Success!\n";
+				}else{
+				cout << "Fail\n";
+				}
 					break;
 					}
 				case 14:{
+				cout << "Enter whose the team's sponsor is: \n";
+					string inp;
+					cin >> inp;
+					table_command = "temp_play <- select ( SPONSOR == " + inp + " ) teams";
+					tokens = tokenize(table_command);
+					bool success = Parse(tokens);
+				if(success){
+					cout << "Success!\n";
+				}else{
+				cout << "Fail\n";
+				}
+				table_command = "SHOW temp_play";
+					tokens = tokenize(table_command);
+					 success = Parse(tokens);
+				if(success){
+					cout << "Success!\n";
+				}else{
+				cout << "Fail\n";
+				}
 					break;
 					}
 				case 15:{
+				cout << "Enter which product the company makes: \n";
+					string name_of_pr;
+					cin >> name_of_pr;
+					table_command = "temp_play <- select ( PRODUCT == " + name_of_pr + " ) sponsors";
+					tokens = tokenize(table_command);
+					bool success = Parse(tokens);
+				if(success){
+					cout << "Success!\n";
+				}else{
+				cout << "Fail\n";
+				}
+                    table_command = "SHOW temp_play";
+					tokens = tokenize(table_command);
+                    success = Parse(tokens);
+                    if(success){
+                        cout << "Success!\n";
+                    }else{
+                        cout << "Fail\n";
 					break;
 					}
-				case 16:{
+                }
+                case 16: {
+                    table_command = "temp <- project ( SPONSOR ) teams";
+                    tokens = tokenize(table_command);
+					bool success = Parse(tokens);
+                    if(success){
+                        cout << "Success!\n";
+                    }else{
+                        cout << "Fail\n";
+                    }
+                    table_command = "SHOW temp";
+                    tokens = tokenize(table_command);
+					 success = Parse(tokens);
+                    if(success){
+                        cout << "Success!\n";
+                    }else{
+                        cout << "Fail\n";
+                    }
+                    break;
+                }
+				
+                case 17:{
 					getline(cin, table_command);
 					tokens = tokenize(table_command);
 					bool success = Parse(tokens);
@@ -807,11 +899,12 @@ int main(){
 				cout << "Fail\n";
 				}
 					break;
-					}	
-				case 17:{
+					}
+				case 18:{
 					go_on = false;
 					break;
 					}
+                 
 				default:
 					cout << "That's not really on the menu...\n";
 			
