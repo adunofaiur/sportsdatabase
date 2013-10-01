@@ -128,7 +128,7 @@ bool Write(vector<Token>& input){//Write a currently open table
 	string toWrite = input[iter].get_val();
 	for(int i=0; i<TABLES.size(); i++){
 		if(toWrite.compare(NAMES[i])==0){
-			TABLES[i]->save();
+			TABLES[i]->save(NAMES[i]);
 			return true;
 		}
 	}
