@@ -371,14 +371,14 @@ class Table{
 		return true;
 	}
 
-	void save(){
-		string filename = name + ".db";
+	void save(string fname){
+		string filename = fname + ".db";
 		ofstream fout (filename.c_str() , ofstream::out);
 		for(int i =0; i<num_entries; i++){
 			for(int j = 0; j<num_fields; j++){
 				fout<<Data[i][j]<<" ";
 			}
-			fout<<"[()] ";//Sequence that will not be likely to appear to indicate end of row
+			fout<<"[()] \n";//Sequence that will not be likely to appear to indicate end of row
 		}
 		fout.close();
 	}
