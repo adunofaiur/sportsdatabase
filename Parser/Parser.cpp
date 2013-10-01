@@ -14,7 +14,7 @@
 #include "Lexer.cpp"
 
 using namespace std;
-
+ 
 int iter=0;
 
 Token NoToken = *(new Token());
@@ -64,7 +64,7 @@ Table* SelectParse(vector<string>& logic, Table& begin, Table& curr, int& it){//
 		else if(logic[i]==")"){ ++it; return temp;}
 		else if(logic[i]=="!="){*temp = *(begin.rowQuerry(logic[i+1], name1, '=')); it+=3; i++;}
 		else if(logic[i]==">"){*temp = *(begin.rowQuerry(logic[i+1], name1, '>')); it+=3; i++;}
-		else if(logic[i]=="=="){*temp = *(begin.rowQuerry(logic[i+1], name1, '=')); it+=3; i++; temp -> show();}
+		else if(logic[i]=="=="){*temp = *(begin.rowQuerry(logic[i+1], name1, '=')); it+=3; i++;}
 		else if(logic[i]==">"){*temp = *(begin.rowQuerry(logic[i+1], name1, '<')); it+=3; i++;}
 		else if(logic[i]==">="){*temp = *(begin.rowQuerry(logic[i+1], name1, '>')); temp->setUnion(*(begin.rowQuerry(logic[i+1], name1, '='))); it+=3; i++;}
 		else if(logic[i]=="<="){*temp = *(begin.rowQuerry(logic[i+1], name1, '<')); temp->setUnion(*(begin.rowQuerry(logic[i+1], name1, '='))); it+=3; i++;}
@@ -375,15 +375,15 @@ Table* Projection(vector<Token>& input ){//Finished function
         UnEat();
         return NULL;
     }
-    Token delimit('h', "");
+   Token delimit('h', "");
     Token comma('h', ",");
-    bool ret = Match(input, delimit);
+	if(!Match(input, delimit)) return NULL;
 	vector<string> fields;
 	if(input[iter].get_id()!='i') return NULL;
-	fields.push_back(input[iter].get_val());
-    while(ret && Match(input, comma)){
-        ret = ret && (input[iter].get_id()=='i');
+	fields.push_back(Eat(input).get_val());
+    while(Match(input, comma)){
 		Token tok = Eat(input);
+		if(tok.get_id()!='i') return NULL;
 		fields.push_back(tok.get_val());
     }
 	Table* tbl = Identifier(input);
@@ -542,6 +542,7 @@ bool Parse(vector<Token>& input){//Finished function
 #endif
 
 int main(){
+
 iter = 0;
 		cout << "Welcome to the database app.\n";
 		cout << "You may use either SQL query language or the following command menu.\n";
@@ -553,21 +554,19 @@ iter = 0;
 		
 		table_command = "OPEN players;";
 		tokens = tokenize(table_command);
-		bool maybe = Parse(tokens);
-		cout << maybe << "\n";
+		Parse(tokens);
 		table_command = "OPEN teams;";
 		tokens = tokenize(table_command);
-		maybe = Parse(tokens);
-		cout << maybe << "\n";
+		Parse(tokens);
 		
 		table_command = "OPEN sponsors";
 		tokens = tokenize(table_command);
-		maybe = Parse(tokens);
-		cout << maybe << "\n";
+		Parse(tokens);
 		bool go_on = true;
     
     
-    
+		while(go_on){
+		cout << "      MENU:   \n";
         cout << "1  - Add player\n";
         cout << "2  - Add team\n";
         cout << "3  - Add sponsor\n";
@@ -584,9 +583,9 @@ iter = 0;
         cout << "14 - Show teams by sponsor\n";
         cout << "15 - Show players on team\n";
         cout << "16 - Show the hometowns of all teams\n";
-		while(go_on){
+		cout << "17 - Use SQL prompt to give input\n";
+		cout << "18 - Exit\n";
 		
-			cout << "1 - Add player\n";
 			cout<<"Give your menu option: \n";
 			int input;
 			cin >> input;
@@ -809,24 +808,29 @@ iter = 0;
 					break;
 					}
 				case 13:{
-					cout << "Enter which team the players should be from: \n";
+					cout<<"Enter the player name:\n";
 					string inp;
-					cin >> inp;
-					table_command = "temp_play <- select ( TEAM == " + inp + " ) players";
+					cin>>inp;
+					table_command = "tmp <- select ( PLAYER == " + inp + "  ) players";
 					tokens = tokenize(table_command);
 					bool success = Parse(tokens);
-					table_command = "SHOW temp_play";
-					tokens = tokenize(table_command);
-				    success = Parse(tokens);
-				if(success){
-					cout << "Success!\n";
-				}else{
-				cout << "Fail\n";
-				}
-					break;
+					if(success){
+						cout << "Success!\n";
+					}else{
+						cout << "Fail\n";
 					}
+					table_command = "SHOW tmp";
+					tokens = tokenize(table_command);
+					 success = Parse(tokens);
+					if(success){
+						cout << "Success!\n";
+					}else{
+						cout << "Fail\n";
+					}
+					break;
+				}
 				case 14:{
-				cout << "Enter whose the team's sponsor is: \n";
+				cout << "Enter who the team's sponsor is: \n";
 					string inp;
 					cin >> inp;
 					table_command = "temp_play <- select ( SPONSOR == " + inp + " ) teams";
@@ -848,29 +852,25 @@ iter = 0;
 					break;
 					}
 				case 15:{
-				cout << "Enter which product the company makes: \n";
-					string name_of_pr;
-					cin >> name_of_pr;
-					table_command = "temp_play <- select ( PRODUCT == " + name_of_pr + " ) sponsors";
+					cout << "Enter the team name: \n";
+					string inp;
+					cin >> inp;
+					table_command = "temp_play <- select ( TEAM == " + inp + " ) players";
 					tokens = tokenize(table_command);
 					bool success = Parse(tokens);
+					table_command = "SHOW temp_play";
+					tokens = tokenize(table_command);
+				    success = Parse(tokens);
 				if(success){
 					cout << "Success!\n";
 				}else{
 				cout << "Fail\n";
 				}
-                    table_command = "SHOW temp_play";
-					tokens = tokenize(table_command);
-                    success = Parse(tokens);
-                    if(success){
-                        cout << "Success!\n";
-                    }else{
-                        cout << "Fail\n";
 					break;
 					}
-                }
+
                 case 16: {
-                    table_command = "temp <- project ( SPONSOR ) teams";
+                    table_command = "temp <- project ( TEAM, LOCATION ) teams";
                     tokens = tokenize(table_command);
 					bool success = Parse(tokens);
                     if(success){
@@ -890,13 +890,14 @@ iter = 0;
                 }
 				
                 case 17:{
+					cout << "Enter a querry or command: \n";
 					getline(cin, table_command);
 					tokens = tokenize(table_command);
 					bool success = Parse(tokens);
 				if(success){
 					cout << "Success!\n";
 				}else{
-				cout << "Fail\n";
+				cout << "Fail.\n";
 				}
 					break;
 					}
@@ -905,9 +906,10 @@ iter = 0;
 					break;
 					}
                  
-				default:
+				default:{
 					cout << "That's not really on the menu...\n";
-			
+					break;
+					}
 			
 			}
 		
